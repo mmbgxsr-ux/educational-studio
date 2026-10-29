@@ -1,0 +1,359 @@
+{
+ "FRM": {
+  "BH": 480,
+  "CW": 428,
+  "CH": 516
+ },
+ "CLIPS": {
+  "idle": {
+   "name": "وقوف (تنفّس)",
+   "fade": 0,
+   "steps": [
+    [
+     "pose/idle.webp",
+     1000
+    ]
+   ],
+   "loop": true
+  },
+  "wave": {
+   "name": "تحية بالتلويح",
+   "fade": 70,
+   "steps": [
+    [
+     "pose/idle.webp",
+     500
+    ],
+    [
+     "pose/wave_hi.webp",
+     260
+    ],
+    [
+     "pose/wave_lo.webp",
+     260
+    ],
+    [
+     "pose/wave_hi.webp",
+     260
+    ],
+    [
+     "pose/wave_lo.webp",
+     260
+    ],
+    [
+     "pose/wave_hi.webp",
+     260
+    ],
+    [
+     "pose/wave_lo.webp",
+     260
+    ],
+    [
+     "pose/idle.webp",
+     700
+    ]
+   ],
+   "loop": true
+  },
+  "greet": {
+   "name": "تحية باليد على الصدر",
+   "fade": 160,
+   "steps": [
+    [
+     "pose/idle.webp",
+     600
+    ],
+    [
+     "pose/chest.webp",
+     1400
+    ],
+    [
+     "pose/idle.webp",
+     600
+    ]
+   ],
+   "loop": true
+  },
+  "talk": {
+   "name": "يشرح بيديه",
+   "fade": 200,
+   "steps": [
+    [
+     "pose/idle.webp",
+     500
+    ],
+    [
+     "pose/hand_across.webp",
+     700
+    ],
+    [
+     "pose/open.webp",
+     700
+    ],
+    [
+     "pose/explain.webp",
+     700
+    ],
+    [
+     "pose/pinch.webp",
+     700
+    ],
+    [
+     "pose/offer.webp",
+     700
+    ],
+    [
+     "pose/open2.webp",
+     700
+    ],
+    [
+     "pose/idle.webp",
+     500
+    ]
+   ],
+   "loop": true
+  },
+  "point_right": {
+   "name": "يشير لليمين",
+   "fade": 160,
+   "steps": [
+    [
+     "pose/idle.webp",
+     500
+    ],
+    [
+     "pose/point_r.webp",
+     1600
+    ],
+    [
+     "pose/idle.webp",
+     400
+    ]
+   ],
+   "loop": true
+  },
+  "point_left": {
+   "name": "يشير لليسار",
+   "fade": 160,
+   "steps": [
+    [
+     "pose/idle.webp",
+     500
+    ],
+    [
+     "pose/point_l.webp",
+     1600
+    ],
+    [
+     "pose/idle.webp",
+     400
+    ]
+   ],
+   "loop": true
+  },
+  "point_up": {
+   "name": "يشير للأعلى",
+   "fade": 160,
+   "steps": [
+    [
+     "pose/idle.webp",
+     500
+    ],
+    [
+     "pose/point_up_r.webp",
+     1500
+    ],
+    [
+     "pose/point_r2.webp",
+     1200
+    ],
+    [
+     "pose/idle.webp",
+     400
+    ]
+   ],
+   "loop": true
+  },
+  "present": {
+   "name": "يقدّم ويعرض",
+   "fade": 180,
+   "steps": [
+    [
+     "pose/idle.webp",
+     400
+    ],
+    [
+     "pose/present.webp",
+     1600
+    ],
+    [
+     "pose/point_r4.webp",
+     1400
+    ],
+    [
+     "pose/idle.webp",
+     400
+    ]
+   ],
+   "loop": true
+  },
+  "count": {
+   "name": "يعدّ بالأصابع",
+   "fade": 100,
+   "steps": [
+    [
+     "pose/idle.webp",
+     500
+    ],
+    [
+     "pose/one.webp",
+     1100
+    ],
+    [
+     "pose/two.webp",
+     1100
+    ],
+    [
+     "pose/idle.webp",
+     500
+    ]
+   ],
+   "loop": true
+  },
+  "stop": {
+   "name": "انتبهوا (إيقاف)",
+   "fade": 120,
+   "steps": [
+    [
+     "pose/idle.webp",
+     400
+    ],
+    [
+     "pose/cupped.webp",
+     800
+    ],
+    [
+     "pose/stop.webp",
+     1400
+    ],
+    [
+     "pose/idle.webp",
+     400
+    ]
+   ],
+   "loop": true
+  },
+  "think": {
+   "name": "يفكّر",
+   "fade": 200,
+   "steps": [
+    [
+     "pose/idle.webp",
+     400
+    ],
+    [
+     "pose/think.webp",
+     1200
+    ],
+    [
+     "pose/think_up.webp",
+     1400
+    ],
+    [
+     "pose/chin.webp",
+     1200
+    ],
+    [
+     "pose/temple.webp",
+     1200
+    ],
+    [
+     "pose/idle.webp",
+     400
+    ]
+   ],
+   "loop": true
+  },
+  "walk_side": {
+   "name": "مشي جانبي",
+   "face": "right",
+   "walk": true,
+   "fade": 0,
+   "steps": [
+    [
+     "walk-side/01.webp",
+     100
+    ],
+    [
+     "walk-side/02.webp",
+     100
+    ],
+    [
+     "walk-side/03.webp",
+     100
+    ],
+    [
+     "walk-side/04.webp",
+     100
+    ],
+    [
+     "walk-side/05.webp",
+     100
+    ],
+    [
+     "walk-side/06.webp",
+     100
+    ],
+    [
+     "walk-side/07.webp",
+     100
+    ],
+    [
+     "walk-side/08.webp",
+     100
+    ]
+   ],
+   "loop": true
+  },
+  "walk_back": {
+   "name": "مشي من الخلف",
+   "walk": true,
+   "fade": 0,
+   "steps": [
+    [
+     "walk-back/01.webp",
+     100
+    ],
+    [
+     "walk-back/02.webp",
+     100
+    ],
+    [
+     "walk-back/03.webp",
+     100
+    ],
+    [
+     "walk-back/04.webp",
+     100
+    ],
+    [
+     "walk-back/05.webp",
+     100
+    ],
+    [
+     "walk-back/06.webp",
+     100
+    ],
+    [
+     "walk-back/07.webp",
+     100
+    ],
+    [
+     "walk-back/08.webp",
+     100
+    ]
+   ],
+   "loop": true
+  }
+ }
+}
