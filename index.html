@@ -131,6 +131,15 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
 /* العرض */
 #pres{--pn:#16232f;--pn2:#1d2d3c;--ln:rgba(255,255,255,.14);--ink:#fff;--mut:#9fb3c3;position:fixed;inset:0;background:radial-gradient(900px 500px at 50% 0%,#0f2233,#04080c);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;padding:10px;color-scheme:dark}
 #pres[hidden]{display:none}
+#prBox{touch-action:none}
+#pres .pbar,#pres #pprog,#pres #pmsg{transition:opacity .3s}
+#pres.idle .pbar,#pres.idle #pprog,#pres.idle #pmsg{opacity:0;pointer-events:none}
+#pres.idle{cursor:none}
+#pres.nocc #sub{display:none}
+#vprev{--pn:#16232f;--pn2:#1d2d3c;--ln:rgba(255,255,255,.14);--ink:#fff;--mut:#9fb3c3;position:fixed;inset:0;z-index:80;background:rgba(3,7,11,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px;color:#fff;color-scheme:dark}
+#vprev[hidden]{display:none}
+#vprev video{max-width:min(960px,96vw);max-height:calc(100dvh - 150px);border-radius:12px;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#vprev p{margin:0;font-size:13px;color:#9fb3c3;text-align:center;max-width:560px;line-height:1.7}
 #prBox{overflow:hidden;border-radius:14px;box-shadow:0 26px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1)}
 #pprog{display:flex;gap:5px;width:min(900px,92vw)}
 #pprog i{flex:1;height:4px;border-radius:3px;background:rgba(255,255,255,.18)}
@@ -357,7 +366,7 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
   </div>
   <div class="grp stack"><button class="btn pri" id="mp4"><svg class="i"><use href="#i-download"/></svg><span>فيديو MP4 (كل المشاهد)</span></button>
 <div class="fr"><span>إدراج الشرح كترجمة</span><input type="checkbox" id="mp4Sub" checked></div></div>
-<p class="hint">الفيديو 1280×720، ويتضمن الصوت المسجّل أو المرفوع لكل مشهد (المشهد بلا تسجيل يبقى صامتًا لأن المتصفح لا يسمح بتسجيل القراءة الآلية). مدة المشهد بطول صوته. يحتاج Chrome أو Edge أو Safari حديثًا، ويعمل من GitHub Pages لا من فتح الملف مباشرة.</p>
+<p class="hint">الفيديو 1280×720، ويتضمن الصوت المسجّل أو المرفوع لكل مشهد (المشهد بلا تسجيل يبقى صامتًا لأن المتصفح لا يسمح بتسجيل القراءة الآلية). مدة المشهد بطول صوته. بعد انتهاء التصدير تظهر نافذة معاينة، وتنزّل الفيديو منها لو أعجبك. يحتاج Chrome أو Edge أو Safari حديثًا، ويعمل من GitHub Pages لا من فتح الملف مباشرة.</p>
 <p class="hint">ملف ZIP يضم صورة لكل مشهد، ونص الشرح، وملف المشروع. العرض يعمل داخل المتصفح ولا يُنتج فيديو. احفظ المشروع كملف للاحتفاظ بنسخة كاملة (Ctrl+S).</p>
  </section>
 </aside>
@@ -367,11 +376,17 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
 <div id="msg" role="status" aria-live="polite"></div>
 <div id="off" class="stage view" aria-hidden="true"></div>
 
+<div id="vprev" hidden role="dialog" aria-label="معاينة الفيديو">
+ <video id="vpv" controls playsinline></video>
+ <p id="vpMsg"></p>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn pri" id="vpDl"><svg class="i"><use href="#i-download"/></svg><span>تنزيل الفيديو</span></button><button class="btn" id="vpX"><svg class="i"><use href="#i-x"/></svg><span>إغلاق</span></button></div>
+</div>
+
 <div id="pres" hidden>
  <div id="prBox"><div class="stage view" id="prStage"></div></div>
  <div id="pprog"></div>
  <div id="sub"></div>
- <div class="pbar"><button class="btn" id="pPrev">السابق</button><button class="btn" id="pPause">⏸ إيقاف</button><button class="btn" id="pNext">التالي</button><span id="pcount"></span><button class="btn" id="pExit"><svg class="i"><use href="#i-x"/></svg><span>إغلاق</span></button></div>
+ <div class="pbar"><button class="btn" id="pPrev">السابق</button><button class="btn" id="pPause">⏸ إيقاف</button><button class="btn" id="pNext">التالي</button><span id="pcount"></span><button class="btn" id="pCC" aria-pressed="true">ترجمة</button><button class="btn" id="pExit"><svg class="i"><use href="#i-x"/></svg><span>إغلاق</span></button></div>
  <p id="pmsg"></p>
 </div>
 
@@ -841,19 +856,47 @@ function playScene(i){stopAll();const my=ptok;pi=i;const sc=P.scenes[i];
  else if(sc.notes.trim()&&v&&window.speechSynthesis){const u=new SpeechSynthesisUtterance(sc.notes);u.voice=v;u.lang=v.lang;
   u.onend=()=>{if(my===ptok)ptimer=setTimeout(next,1200)};u.onerror=()=>{if(my===ptok)ptimer=setTimeout(next,fb)};speechSynthesis.speak(u)}
  else{if(sc.notes.trim())$('pmsg').textContent='لا يوجد صوت عربي في متصفحك؛ يتقدّم العرض بالتوقيت مع إظهار الشرح كنص.';ptimer=setTimeout(next,fb)}}
-function openPres(){paused=false;$('pPause').textContent='⏸ إيقاف';pr.hidden=false;document.body.style.overflow='hidden';fitPres();if(muA){try{muA.pause()}catch(_){}muA=null}musStart();
+function openPres(){paused=false;$('pPause').textContent='⏸ إيقاف';pr.hidden=false;document.body.style.overflow='hidden';fitPres();if(muA){try{muA.pause()}catch(_){}muA=null}musStart();wake();
  try{const p=pr.requestFullscreen&&pr.requestFullscreen();if(p&&p.catch)p.catch(()=>{})}catch(_){}
  playScene(cur)}
-function closePres(){stopAll();musStop();pr.hidden=true;prSt.innerHTML='';document.body.style.overflow='';
+function closePres(){stopAll();musStop();clearTimeout(idleT);pr.classList.remove('idle');pr.hidden=true;prSt.innerHTML='';document.body.style.overflow='';
  try{if(document.fullscreenElement){const p=document.exitFullscreen();if(p&&p.catch)p.catch(()=>{})}}catch(_){}}
 $('play').onclick=openPres;$('pExit').onclick=closePres;
 $('pNext').onclick=()=>{if(pi<P.scenes.length-1){paused=false;$('pPause').textContent='⏸ إيقاف';playScene(pi+1)}};
 $('pPrev').onclick=()=>{if(pi>0){paused=false;$('pPause').textContent='⏸ إيقاف';playScene(pi-1)}};
-$('pPause').onclick=()=>{paused=!paused;if(paused){stopAll();if(pMus)pMus.pause();$('pPause').textContent='▶ متابعة'}else{$('pPause').textContent='⏸ إيقاف';if(pMus)pMus.play().catch(()=>{});playScene(pi)}};
+$('pPause').onclick=()=>{paused=!paused;if(paused){stopAll();if(pMus)pMus.pause();$('pPause').textContent='▶ متابعة'}else{$('pPause').textContent='⏸ إيقاف';if(pMus)pMus.play().catch(()=>{});playScene(pi)}wake()};
 document.addEventListener('keydown',e=>{if(pr.hidden)return;
  if(e.key==='ArrowLeft'||e.key==='PageDown'||e.key===' '){e.preventDefault();$('pNext').click()}
  else if(e.key==='ArrowRight'||e.key==='PageUp'){e.preventDefault();$('pPrev').click()}
  else if(e.key==='Escape')closePres()});
+
+/* ---------- تحكم باللمس وإخفاء الأزرار تلقائيًا وزر الترجمة ---------- */
+let idleT=0;
+function wake(){pr.classList.remove('idle');clearTimeout(idleT);if(!pr.hidden&&!paused)idleT=setTimeout(()=>pr.classList.add('idle'),3000)}
+pr.addEventListener('pointermove',wake);
+document.addEventListener('keydown',()=>{if(!pr.hidden)wake()});
+let ccOn=true;try{ccOn=localStorage.getItem('es-cc')!=='0'}catch(_){}
+function setCC(){pr.classList.toggle('nocc',!ccOn);$('pCC').setAttribute('aria-pressed',String(ccOn));$('pCC').classList.toggle('on',ccOn)}
+$('pCC').onclick=()=>{ccOn=!ccOn;try{localStorage.setItem('es-cc',ccOn?'1':'0')}catch(_){}setCC()};setCC();
+/* لمسة = إيقاف أو تشغيل (والأولى بعد اختفاء الأزرار تُظهرها فقط). سحب لليسار = التالي، ولليمين = السابق (اتجاه عربي) */
+let tp=null;const pbx=$('prBox');
+pbx.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;tp={x:e.clientX,y:e.clientY,t:performance.now(),idle:pr.classList.contains('idle')};wake()});
+pbx.addEventListener('pointerup',e=>{if(!tp)return;const d=tp;tp=null;const dx=e.clientX-d.x,dy=e.clientY-d.y,dt=performance.now()-d.t;
+ if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)$(dx<0?'pNext':'pPrev').click();
+ else if(Math.abs(dx)<12&&Math.abs(dy)<12&&dt<600&&!d.idle)$('pPause').click();
+ wake()});
+pbx.addEventListener('pointercancel',()=>{tp=null});
+
+/* ---------- معاينة الفيديو المُصدَّر قبل التنزيل ---------- */
+let vpUrl=null,vpBlob=null;
+function showPrev(blob){closePrev();vpBlob=blob;vpUrl=URL.createObjectURL(blob);const v=$('vpv');
+ $('vpMsg').textContent='راجع الفيديو، ثم اضغط «تنزيل الفيديو» لو الشكل مناسب.';
+ v.onerror=()=>{$('vpMsg').textContent='تعذّر تشغيل المعاينة في هذا المتصفح، لكن يمكنك تنزيل الملف وتجربته في مشغّل الفيديو.'};
+ v.src=vpUrl;$('vprev').hidden=false;document.body.style.overflow='hidden'}
+function closePrev(){const v=$('vpv');v.onerror=null;try{v.pause()}catch(_){}v.removeAttribute('src');try{v.load()}catch(_){}
+ if(vpUrl){URL.revokeObjectURL(vpUrl);vpUrl=null}vpBlob=null;$('vprev').hidden=true;if(pr.hidden)document.body.style.overflow=''}
+$('vpDl').onclick=()=>{if(vpBlob)dl(vpBlob,'lesson.mp4')};$('vpX').onclick=closePrev;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('vprev').hidden)closePrev()});
 
 /* ---------- لوحة «سينمائي» ---------- */
 Object.keys(GR).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=GR[k][0];$('cGrade').appendChild(o)});
@@ -1098,7 +1141,7 @@ async function run(){
     if(f%10===0){say('المشهد '+(s+1)+' من '+P.scenes.length+': '+Math.round(f/N*100)+'%');await new Promise(r=>setTimeout(r))}}
   }
   await enc.flush();if(err)throw err;if(aenc){await aenc.flush();if(aerr)throw aerr}mux.finalize();
-  dl(new Blob([mux.target.buffer],{type:'video/mp4'}),'lesson.mp4');say(noA?'تم إنشاء الفيديو بدون صوت: متصفحك لا يدعم ترميز الصوت AAC. جرّب Chrome أو Edge أو Safari حديثًا.':'تم إنشاء الفيديو'+(useA?' مع الصوت.':'.'));
+  showPrev(new Blob([mux.target.buffer],{type:'video/mp4'}));say(noA?'تم إنشاء الفيديو بدون صوت: متصفحك لا يدعم ترميز الصوت AAC. جرّب Chrome أو Edge أو Safari حديثًا.':'تم إنشاء الفيديو'+(useA?' مع الصوت.':'.'));
  }catch(e){console.error(e);say(e&&e.name==='SecurityError'?'تعذّر الرسم: شغّل الاستوديو من GitHub Pages بدل فتح الملف مباشرة.':'تعذّر إنشاء الفيديو.')}
  finally{b.disabled=false}}
 $$('mp4').onclick=run;
