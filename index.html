@@ -110,6 +110,14 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
 @keyframes pin{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
 .links.in{animation:fin .8s both}
 @keyframes fin{from{opacity:0}to{opacity:1}}
+/* الشكل السينمائي */
+.cam{position:absolute;inset:0;transform-origin:480px 270px}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:30}
+.fx>div{position:absolute}
+.fg,.fv{inset:0}
+.fb{left:0;right:0;background:#000}
+.fb.t{top:0}
+.fb.b{bottom:0}
 /* العرض */
 #pres{--pn:#16232f;--pn2:#1d2d3c;--ln:rgba(255,255,255,.14);--ink:#fff;--mut:#9fb3c3;position:fixed;inset:0;background:radial-gradient(900px 500px at 50% 0%,#0f2233,#04080c);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;padding:10px;color-scheme:dark}
 #pres[hidden]{display:none}
@@ -160,6 +168,7 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
 <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></symbol>
 <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10z"/></symbol>
 <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -206,6 +215,7 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
   <button class="tab" role="tab" data-t="items"><svg class="i"><use href="#i-shapes"/></svg>العناصر</button>
   <button class="tab" role="tab" data-t="bg"><svg class="i"><use href="#i-image"/></svg>الخلفية</button>
   <button class="tab" role="tab" data-t="anim"><svg class="i"><use href="#i-play"/></svg>تحريك</button>
+  <button class="tab" role="tab" data-t="cine"><svg class="i"><use href="#i-film"/></svg>سينمائي</button>
   <button class="tab" role="tab" data-t="export"><svg class="i"><use href="#i-download"/></svg>تصدير</button>
  </div>
 
@@ -290,6 +300,28 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
    <textarea id="aPr" readonly rows="8" style="margin-top:8px" aria-label="البرومت"></textarea>
    <button class="btn sm" id="aCopy" style="margin-top:8px"><svg class="i"><use href="#i-copy"/></svg><span>نسخ البرومت</span></button></div>
  </section>
+ <section class="pane" data-t="cine" hidden>
+  <div class="grp"><h3>قالب جاهز</h3>
+   <button class="btn pri" id="cPreset" style="width:100%;justify-content:center"><svg class="i"><use href="#i-film"/></svg><span>تطبيق الشكل السينمائي على كل المشاهد</span></button>
+   <button class="btn" id="cOff" style="width:100%;justify-content:center;margin-top:8px"><span>إلغاء كل المؤثرات</span></button>
+   <p class="hint">القالب يضيف شريطًا سينمائيًا خفيفًا، وتدرّج ألوان أزرق وبرتقالي، وتعتيمًا جانبيًا، وحركة كاميرا مختلفة لكل مشهد. تقدر تعدّل أي شيء بعده.</p>
+  </div>
+  <div class="grp"><h3>الشريط السينمائي</h3>
+   <select id="cBars" aria-label="نسبة الشريط السينمائي"><option value="0">بدون</option><option value="1.85">1.85:1 (خفيف)</option><option value="2">2:1</option><option value="2.39">2.39:1 (سينمائي كامل)</option></select>
+   <p class="hint">في المحرّر يظهر الشريط شبه شفاف لتتمكن من التعديل، وفي العرض والفيديو يكون أسود كاملًا. النسبة 2.39:1 تغطي نحو 69 بكسل من أعلى المشهد وأسفله، فاترك العناوين بعيدة عن الحافة.</p>
+  </div>
+  <div class="grp"><h3>تدرّج الألوان</h3>
+   <select id="cGrade" aria-label="تدرّج الألوان"></select>
+   <div class="fr" style="margin-top:12px"><span>قوة التدرّج <b id="cGsV">70</b></span><input type="range" id="cGs" min="0" max="100" value="70" aria-label="قوة التدرّج"></div>
+   <div class="fr"><span>التعتيم الجانبي <b id="cVigV">0</b></span><input type="range" id="cVig" min="0" max="100" value="0" aria-label="التعتيم الجانبي"></div>
+  </div>
+  <div class="grp"><h3>كاميرا هذا المشهد</h3>
+   <select id="cCam" aria-label="حركة الكاميرا"></select>
+   <div class="fr" style="margin-top:12px"><span>القوة <b id="cAV">12</b>٪</span><input type="range" id="cA" min="3" max="30" value="12" aria-label="قوة حركة الكاميرا"></div>
+   <div class="grid2" style="margin-top:8px"><button class="btn" id="cPrev" style="justify-content:center"><svg class="i"><use href="#i-play"/></svg><span>معاينة</span></button><button class="btn" id="cAll" style="justify-content:center"><span>نسخ لكل المشاهد</span></button></div>
+   <p class="hint">الكاميرا تتحرّك طوال مدة المشهد أثناء «عرض الدرس» وفي فيديو MP4. صور PNG تحفظ اللقطة الثابتة بالشريط والألوان فقط.</p>
+  </div>
+ </section>
  <section class="pane" data-t="export" hidden>
   <div class="grp stack">
    <button class="btn pri" id="png"><svg class="i"><use href="#i-download"/></svg><span>المشهد الحالي PNG</span></button>
@@ -322,14 +354,52 @@ const lbl=(b,t)=>{b.querySelector('span').textContent=t};
 /* حركة المقدّم: إطارات جاهزة من مجلد frames/ */
 const CLIPS=window.CLIPS||{},FRM=Object.assign({BH:480,CW:560,CH:600},window.FRM||{});
 const clipOk=id=>!!(id&&CLIPS[id]);
-const ANIM={tok:0,raf:0,on:false};
-function stopAnim(){ANIM.tok++;ANIM.on=false;cancelAnimationFrame(ANIM.raf)}
+const ANIM={tok:0,raf:0,cam:0,on:false};
+function stopAnim(){ANIM.tok++;ANIM.on=false;cancelAnimationFrame(ANIM.raf);cancelAnimationFrame(ANIM.cam)}
 /* مدة المشهد: بطول الصوت المسجّل إن وُجد، وإلا تقدير من النص */
 function sceneMs(sc){const w=(sc.notes||'').trim().split(/\s+/).filter(Boolean).length;
  if(sc.audio)return Math.max(2500,Math.round(sc.audio.dur*1000)+800);
  return Math.max(4000,(sc.panels.length+2)*600+2500,w*420+1500)}
 async function decodeAud(src){const ab=await (await fetch(src)).arrayBuffer(),AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();
  try{return await ctx.decodeAudioData(ab)}finally{try{ctx.close()}catch(_){}}}
+/* ---------- الشكل السينمائي: شريط وتدرّج ألوان وكاميرا ---------- */
+let NOFX=false;
+const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+const BARS=[0,1.85,2,2.39];
+const GR={none:['بدون',null],warm:['دافئ',['rgba(255,150,60,.22)','rgba(255,150,60,.22)']],cool:['بارد',['rgba(60,130,255,.2)','rgba(60,130,255,.2)']],cine:['سينمائي (أزرق وبرتقالي)',['rgba(0,150,175,.24)','rgba(255,140,50,.22)']],night:['ليلي',['rgba(12,28,95,.4)','rgba(12,28,95,.4)']]};
+const CAMS={none:'بدون حركة',in:'تقريب (Zoom In)',out:'ابتعاد (Zoom Out)',left:'تحريك لليسار',right:'تحريك لليمين',hand:'كاميرا محمولة (هزّة خفيفة)'};
+const defLook=()=>({bars:0,grade:'none',gs:70,vig:0});
+const clampN=(v,a,b,d)=>Number.isFinite(+v)?Math.max(a,Math.min(b,+v)):d;
+function normLook(l){l=l&&typeof l==='object'?l:{};return {bars:BARS.includes(+l.bars)?+l.bars:0,grade:has(GR,l.grade)?l.grade:'none',gs:clampN(l.gs,0,100,70),vig:clampN(l.vig,0,100,0)}}
+function normCam(c){c=c&&typeof c==='object'?c:{};return {m:has(CAMS,c.m)?c.m:'none',a:clampN(c.a,.03,.3,.12)}}
+const barPx=(look,H,W)=>look.bars>0?Math.max(0,(H-W/look.bars)/2):0;
+const ease=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+/* موضع الكاميرا في لحظة t من مدة D: [تكبير، إزاحة س، إزاحة ص] بوحدات المشهد 960×540 */
+function camAt(cam,t,D){const a=cam.a,e=ease(D>0?Math.min(1,Math.max(0,t/D)):1);
+ switch(cam.m){
+  case 'in':return [1+a*e,0,0];
+  case 'out':return [1+a*(1-e),0,0];
+  case 'left':{const s=1+a;return [s,(s-1)*480*.9*(2*e-1),0]}
+  case 'right':{const s=1+a;return [s,(s-1)*480*.9*(1-2*e),0]}
+  case 'hand':return [1.04,Math.sin(t/1000*1.7)*a*45,Math.cos(t/1000*2.3)*a*30];
+  default:return [1,0,0]}}
+const camCss=(cam,t,D)=>{const [s,x,y]=camAt(cam,t,D);return 'translate('+x.toFixed(2)+'px,'+y.toFixed(2)+'px) scale('+s.toFixed(4)+')'};
+/* طبقة المؤثرات فوق المشهد: تدرّج لوني، تعتيم جانبي، شريط أسود */
+function fxEl(look,edit){const f=div('fx');
+ if(look.grade!=='none'&&GR[look.grade][1]){const g=div('fg'),c=GR[look.grade][1];g.style.background='linear-gradient(180deg,'+c[0]+','+c[1]+')';g.style.opacity=look.gs/100;f.appendChild(g)}
+ if(look.vig>0){const v=div('fv');v.style.background='radial-gradient(ellipse at center,rgba(0,0,0,0) 52%,rgba(0,0,0,'+(look.vig/100*.75).toFixed(2)+') 100%)';f.appendChild(v)}
+ if(look.bars>0){const h=barPx(look,540,960);['t','b'].forEach(s=>{const b=div('fb '+s);b.style.height=h.toFixed(1)+'px';if(edit)b.style.opacity='.55';f.appendChild(b)})}
+ return f}
+/* تشغيل حركة الكاميرا على عنصر .cam (للعرض والمعاينة) */
+function playCam(root,sc,ms,reset){const el=root.querySelector('.cam'),cam=sc.cam;cancelAnimationFrame(ANIM.cam);
+ if(!el)return;el.style.transform='';if(!cam||cam.m==='none')return;
+ const my=ANIM.tok,t0=performance.now(),loop=cam.m==='hand'&&!reset;
+ const tick=now=>{if(my!==ANIM.tok)return;const t=now-t0;
+  if(reset&&t>=ms){el.style.transform='';return}
+  el.style.transform=camCss(cam,t,ms);
+  if(t<ms||loop)ANIM.cam=requestAnimationFrame(tick)};
+ el.style.transform=camCss(cam,0,ms);ANIM.cam=requestAnimationFrame(tick)}
+
 const BGS=[
  ['غابة','linear-gradient(180deg,#9fd3ee 0%,#cfe9d0 35%,#2f7a3a 60%,#16401d 100%)'],
  ['جفاف','linear-gradient(180deg,#f3c58a 0%,#e9a35a 40%,#a9692f 70%,#6a3f1b 100%)'],
@@ -349,7 +419,7 @@ const isAud=s=>typeof s==='string'&&s.length<4.2e6&&/^data:audio\/[\w.+-]+(;[\w=
 const isImg=s=>typeof s==='string'&&/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(s);
 const hexC=(c,d)=>typeof c==='string'&&/^#[0-9a-f]{6}$/i.test(c)?c:d,numC=(v,d)=>Number.isFinite(+v)?+v:d;
 const defMan=()=>({on:true,x:60,y:120,h:420,pose:'point',flip:false,img:null,anim:null,travel:0,sh:'#1b1b1b',pa:'#222222',sk:'#c98f65'});
-const newScene=name=>({id:uid(),name:name||'مشهد',bg:0,bgImg:null,notes:'',audio:null,man:defMan(),panels:[],globe:null,links:[]});
+const newScene=name=>({id:uid(),name:name||'مشهد',bg:0,bgImg:null,notes:'',audio:null,man:defMan(),panels:[],globe:null,links:[],cam:{m:'none',a:.12}});
 function fixScene(s){
  const o=Object.assign(newScene(),s||{});
  o.man=Object.assign(defMan(),(s&&s.man)||{});
@@ -364,6 +434,7 @@ function fixScene(s){
  o.panels=(Array.isArray(o.panels)?o.panels:[]).filter(p=>p&&p.id).map(p=>{const q=Object.assign({k:'p',txt:'',x:100,y:100,w:200,h:80},p);q.id=String(q.id).replace(/[^\w-]/g,'');if(!['p','t','l','i'].includes(q.k))q.k='p';q.txt=String(q.txt==null?'':q.txt);['x','y','w','h'].forEach(k=>q[k]=numC(q[k],{x:100,y:100,w:200,h:80}[k]));if(q.k==='i'&&!isImg(q.src))q.src='';return q});
  o.links=Array.isArray(o.links)?o.links:[];
  if(o.globe&&typeof o.globe==='object'){o.globe=Object.assign({x:760,y:230,s:180},o.globe);['x','y','s'].forEach(k=>o.globe[k]=numC(o.globe[k],{x:760,y:230,s:180}[k]))}else o.globe=null;
+ o.cam=normCam(o.cam);
  cleanLinks(o);return o}
 function cleanLinks(sc){const ids=new Set(sc.panels.map(p=>p.id));if(sc.globe)ids.add('globe');sc.links=sc.links.filter(l=>Array.isArray(l)&&ids.has(l[0])&&ids.has(l[1]))}
 function sample(){
@@ -376,10 +447,10 @@ function sample(){
  a.globe={x:760,y:230,s:180};a.links=[[r.id,s.id],[d.id,s.id],[s.id,'globe']];
  const b=newScene('ملخّص الدرس');b.bg=4;b.man.pose='open';b.notes='لنلخّص ما تعلّمناه: الغابات الموسمية لها موسمان، والجفاف فيها يستمر عدة أشهر، وتتميّز بتنوّع بيولوجي كبير.';
  b.panels.push({id:uid(),k:'t',txt:'ملخّص الدرس',x:280,y:16,w:400,h:60},{id:uid(),k:'l',txt:'• موسم أمطار وموسم جفاف\n• الجفاف من ٤ إلى ٦ أشهر\n• تنوّع بيولوجي كبير',x:500,y:120,w:400,h:170});
- return {theme:{pc:'#0a4682',pe:'#19c6ff'},scenes:[a,b]}}
+ return {theme:{pc:'#0a4682',pe:'#19c6ff'},look:defLook(),scenes:[a,b]}}
 function loadLS(){try{const d=JSON.parse(localStorage.getItem(KEY));return norm(d)}catch(e){return null}}
 function norm(d){if(!d||!Array.isArray(d.scenes)||!d.scenes.length)return null;const t=d.theme||{};
- return {theme:{pc:/^#[0-9a-f]{6}$/i.test(t.pc)?t.pc:'#0a4682',pe:/^#[0-9a-f]{6}$/i.test(t.pe)?t.pe:'#19c6ff'},scenes:d.scenes.map(fixScene)}}
+ return {theme:{pc:/^#[0-9a-f]{6}$/i.test(t.pc)?t.pc:'#0a4682',pe:/^#[0-9a-f]{6}$/i.test(t.pe)?t.pe:'#19c6ff'},look:normLook(d.look),scenes:d.scenes.map(fixScene)}}
 let P=loadLS()||sample(),cur=0,linkMode=false,sel=null;
 const S=()=>P.scenes[cur];
 let tm;function touch(){clearTimeout(tm);tm=setTimeout(()=>{paintThumb(cur);try{localStorage.setItem(KEY,JSON.stringify(P));$('amsg').textContent='● حُفظ تلقائيًا'}catch(e){$('amsg').textContent='تعذّر الحفظ التلقائي — احفظ المشروع كملف'}},500)}
@@ -483,19 +554,21 @@ function playAnim(root,sc,ms,travel){
  box.style.transform=`scale(${sx},1)`;ANIM.raf=requestAnimationFrame(tick)}
 function render(sc,root,edit,anim){
  root.innerHTML='';root.className='stage'+(edit?'':' view');
+ const cam=div('cam');root.appendChild(cam);
  let d=0;const A=e=>{if(anim){e.classList.add('in');e.style.animationDelay=(d+=.55)+'s'}};
- const bg=div('bg');bg.style.backgroundImage=sc.bgImg?'url("'+sc.bgImg+'")':BGS[sc.bg][1];root.appendChild(bg);
- const L=document.createElementNS(NS,'svg');L.setAttribute('class','links');L.setAttribute('viewBox','0 0 960 540');root.appendChild(L);
+ const bg=div('bg');bg.style.backgroundImage=sc.bgImg?'url("'+sc.bgImg+'")':BGS[sc.bg][1];cam.appendChild(bg);
+ const L=document.createElementNS(NS,'svg');L.setAttribute('class','links');L.setAttribute('viewBox','0 0 960 540');cam.appendChild(L);
  const m=sc.man;
  if(m.on){const e=div('ph');e.style.cssText=`left:${m.x}px;top:${m.y}px;height:${m.h}px`;
   if(clipOk(m.anim))mkAnim(e,m,CLIPS[m.anim]);
   else if(m.img){const im=new Image();im.alt='';im.src=m.img;if(m.flip)im.className='flip';e.appendChild(im)}else e.innerHTML=manSVG(m);
-  A(e);root.appendChild(e);if(edit)drag(root,sc,e,e,m)}
- sc.panels.forEach(p=>{const e=mkPanel(p,sc,root,edit);A(e);root.appendChild(e)});
+  A(e);cam.appendChild(e);if(edit)drag(root,sc,e,e,m)}
+ sc.panels.forEach(p=>{const e=mkPanel(p,sc,root,edit);A(e);cam.appendChild(e)});
  if(sc.globe){const g=sc.globe,e=div('globe');e.dataset.id='globe';e.style.cssText=`left:${g.x}px;top:${g.y}px;width:${g.s}px;height:${g.s}px`;
-  e.innerHTML=globeSVG(++gid);A(e);root.appendChild(e);if(edit)drag(root,sc,e,e,g)}
+  e.innerHTML=globeSVG(++gid);A(e);cam.appendChild(e);if(edit)drag(root,sc,e,e,g)}
  drawLinks(root,sc);
  if(anim){L.classList.add('in');L.style.animationDelay=(d+.3)+'s'}
+ if(!NOFX)root.appendChild(fxEl(P.look,edit));
  if(edit&&root===st)watch(root,sc)}
 const redraw=()=>{stopAnim();setPlayBtn();render(S(),st,true);touch()};
 
@@ -524,7 +597,7 @@ function syncUI(){const sc=S(),m=sc.man;
  $('mClip').value=m.anim||'';$('mTravel').value=m.travel||0;$('mTravelV').textContent=m.travel||0;setPlayBtn();
  document.querySelectorAll('.sw').forEach((s,j)=>s.classList.toggle('on',!sc.bgImg&&j===sc.bg));
  lbl($('addG'),sc.globe?'حذف الكرة':'كرة أرضية');if(sc.globe)$('gs').value=sc.globe.s;
- $('pc').value=P.theme.pc;$('pe').value=P.theme.pe;setLink(false);drawChips()}
+ $('pc').value=P.theme.pc;$('pe').value=P.theme.pe;setLink(false);syncCine();drawChips()}
 function selectScene(i){stopAnim();stopAud();cur=Math.max(0,Math.min(P.scenes.length-1,i));render(S(),st,true);syncUI()}
 
 function setTab(n){document.querySelectorAll('.tab').forEach(t=>{const on=t.dataset.t===n;t.classList.toggle('on',on);t.setAttribute('aria-selected',on)});
@@ -598,7 +671,7 @@ $('openJ').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)
  try{const d=norm(JSON.parse(await f.text()));if(!d)throw 0;P=d;cur=0;selectScene(0);touch();$('msg').textContent='تم فتح المشروع.'}
  catch(_){$('msg').textContent='الملف غير صالح كمشروع.'}};
 $('newP').onclick=()=>{if(!confirm('بدء مشروع جديد؟ سيُستبدل المشروع الحالي (احفظه أولًا كملف إن أردت).'))return;
- const s=newScene('مشهد 1');s.panels.push({id:uid(),k:'t',txt:'عنوان الدرس',x:280,y:16,w:400,h:60});P={theme:{pc:'#0a4682',pe:'#19c6ff'},scenes:[s]};selectScene(0);touch()};
+ const s=newScene('مشهد 1');s.panels.push({id:uid(),k:'t',txt:'عنوان الدرس',x:280,y:16,w:400,h:60});P={theme:{pc:'#0a4682',pe:'#19c6ff'},look:defLook(),scenes:[s]};selectScene(0);touch()};
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();$('saveJ').click()}});
 
 /* السمة والإشعارات */
@@ -689,7 +762,7 @@ let pAud=null;
 function stopAll(){ptok++;clearTimeout(ptimer);stopAnim();if(pAud){try{pAud.pause()}catch(_){}pAud=null}try{speechSynthesis.cancel()}catch(_){}}
 function playScene(i){stopAll();const my=ptok;pi=i;const sc=P.scenes[i];
  render(sc,prSt,false,true);$('sub').textContent=sc.notes||'';$('pcount').textContent=(i+1)+' / '+P.scenes.length;
- playAnim(prSt,sc,sceneMs(sc),true);
+ playAnim(prSt,sc,sceneMs(sc),true);playCam(prSt,sc,sceneMs(sc));
  $('pprog').innerHTML=P.scenes.map((_,k)=>'<i class="'+(k<=i?'d':'')+'"></i>').join('');
  const next=()=>{if(my!==ptok)return;if(pi<P.scenes.length-1)playScene(pi+1);else $('pmsg').textContent='انتهى الدرس.'};
  const fb=sceneMs(sc),v=arVoice();
@@ -712,6 +785,26 @@ document.addEventListener('keydown',e=>{if(pr.hidden)return;
  if(e.key==='ArrowLeft'||e.key==='PageDown'||e.key===' '){e.preventDefault();$('pNext').click()}
  else if(e.key==='ArrowRight'||e.key==='PageUp'){e.preventDefault();$('pPrev').click()}
  else if(e.key==='Escape')closePres()});
+
+/* ---------- لوحة «سينمائي» ---------- */
+Object.keys(GR).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=GR[k][0];$('cGrade').appendChild(o)});
+Object.keys(CAMS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=CAMS[k];$('cCam').appendChild(o)});
+function syncCine(){const l=P.look,c=S().cam;
+ $('cBars').value=String(l.bars);$('cGrade').value=l.grade;
+ $('cGs').value=l.gs;$('cGsV').textContent=l.gs;$('cVig').value=l.vig;$('cVigV').textContent=l.vig;
+ $('cCam').value=c.m;$('cA').value=Math.round(c.a*100);$('cAV').textContent=Math.round(c.a*100)}
+let lkT;function lookChanged(){redraw();clearTimeout(lkT);lkT=setTimeout(()=>P.scenes.forEach((_,i)=>paintThumb(i)),150)}
+$('cBars').onchange=e=>{P.look.bars=+e.target.value;lookChanged()};
+$('cGrade').onchange=e=>{P.look.grade=e.target.value;lookChanged()};
+$('cGs').oninput=e=>{P.look.gs=+e.target.value;$('cGsV').textContent=e.target.value;lookChanged()};
+$('cVig').oninput=e=>{P.look.vig=+e.target.value;$('cVigV').textContent=e.target.value;lookChanged()};
+$('cCam').onchange=e=>{S().cam.m=e.target.value;touch()};
+$('cA').oninput=e=>{S().cam.a=+e.target.value/100;$('cAV').textContent=e.target.value;touch()};
+$('cPrev').onclick=()=>{const sc=S();if(sc.cam.m==='none'){$('msg').textContent='اختر حركة كاميرا أولًا.';return}playCam(st,sc,4000,true)};
+$('cAll').onclick=()=>{const c=S().cam;P.scenes.forEach(s=>s.cam={m:c.m,a:c.a});touch();$('msg').textContent='تم نسخ حركة الكاميرا لكل المشاهد.'};
+const CYC=['in','left','out','right'];
+$('cPreset').onclick=()=>{P.look={bars:1.85,grade:'cine',gs:60,vig:35};P.scenes.forEach((s,i)=>s.cam={m:CYC[i%4],a:.1});lookChanged();syncCine();$('msg').textContent='تم تطبيق الشكل السينمائي. جرّب «عرض الدرس».'};
+$('cOff').onclick=()=>{P.look=defLook();P.scenes.forEach(s=>s.cam={m:'none',a:.12});lookChanged();syncCine()};
 
 /* ---------- البدء ---------- */
 selectScene(0);fitEditor();
@@ -830,8 +923,15 @@ function drawMan(c,L,m,t,D){if(!L)return;
  c.save();c.translate((m.x+dist*p)*k+bw/2,(m.y+m.h)*k);c.scale(sx,1+.012*Math.sin(t/1000*2.4));
  if(a<1&&prev!==cur)c.drawImage(prev,-bw/2,-bh,bw,bh);
  c.globalAlpha=a;c.drawImage(cur,-bw/2,-bh,bw,bh);c.restore()}
-function drawSub(c,pg){if(!pg)return;c.save();c.direction='rtl';c.textAlign='center';c.textBaseline='middle';c.font='700 30px Cairo,Tahoma,sans-serif';
- const lh=44,h=pg.length*lh+24,w=Math.min(1160,Math.max(...pg.map(x=>c.measureText(x).width))+60),x=(W-w)/2,y=H-h-24;
+/* حركة الكاميرا على اللوحة (المشهد والمقدّم معًا، دون الترجمة والمؤثرات) */
+function camCtx(c,cam,t,D){const [s,x,y]=camAt(cam||{m:'none',a:.12},t,D);c.translate(W/2+x*k,H/2+y*k);c.scale(s,s);c.translate(-W/2,-H/2)}
+/* المؤثرات: تدرّج لوني، تعتيم جانبي، شريط أسود، بنفس مواصفات المعاينة */
+function drawFx(c,look){
+ if(look.grade!=='none'&&GR[look.grade][1]){const cs=GR[look.grade][1],g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,cs[0]);g.addColorStop(1,cs[1]);c.save();c.globalAlpha=look.gs/100;c.fillStyle=g;c.fillRect(0,0,W,H);c.restore()}
+ if(look.vig>0){c.save();c.translate(W/2,H/2);c.scale(W/2*Math.SQRT2,H/2*Math.SQRT2);const g=c.createRadialGradient(0,0,0,0,0,1);g.addColorStop(.52,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+(look.vig/100*.75).toFixed(2)+')');c.fillStyle=g;c.fillRect(-1.5,-1.5,3,3);c.restore()}
+ const h=barPx(look,H,W);if(h>0){c.fillStyle='#000';c.fillRect(0,0,W,h);c.fillRect(0,H-h,W,h)}}
+function drawSub(c,pg,lift){if(!pg)return;c.save();c.direction='rtl';c.textAlign='center';c.textBaseline='middle';c.font='700 30px Cairo,Tahoma,sans-serif';
+ const lh=44,h=pg.length*lh+24,w=Math.min(1160,Math.max(...pg.map(x=>c.measureText(x).width))+60),x=(W-w)/2,y=H-h-24-(lift||0);
  c.fillStyle='rgba(5,10,15,.7)';c.strokeStyle='rgba(255,255,255,.14)';c.beginPath();c.roundRect?c.roundRect(x,y,w,h,18):c.rect(x,y,w,h);c.fill();c.stroke();
  c.fillStyle='#fff';pg.forEach((s,j)=>c.fillText(s,W/2,y+12+lh*(j+.5)));c.restore()}
 const SR=48000;
@@ -854,7 +954,8 @@ async function run(){
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),subs=$$('mp4Sub').checked;let n=0;
   for(let s=0;s<P.scenes.length;s++){
    const sc=P.scenes[s],D=dur(sc);say('المشهد '+(s+1)+' من '+P.scenes.length+': تجهيز…');
-   const base=await snap(Object.assign({},sc,{man:Object.assign({},sc.man,{on:false})})),L=await layer(sc);
+   let base;NOFX=true;try{base=await snap(Object.assign({},sc,{man:Object.assign({},sc.man,{on:false})}))}finally{NOFX=false}
+   const L=await layer(sc);
    let pages=[];if(subs&&(sc.notes||'').trim()){c.font='700 30px Cairo,Tahoma,sans-serif';c.direction='rtl';const ls=wrap(c,sc.notes.trim(),1090);for(let i=0;i<ls.length;i+=2)pages.push(ls.slice(i,i+2))}
    const N=Math.ceil(D/1000*FPS);
    if(useA){say('المشهد '+(s+1)+' من '+P.scenes.length+': ترميز الصوت…');
@@ -864,7 +965,8 @@ async function run(){
      aenc.encode(ad);ad.close();if(aerr)throw aerr;if(aenc.encodeQueueSize>20)await new Promise(r=>setTimeout(r,5))}
     aN+=total}
    for(let f=0;f<N;f++){const t=f*1000/FPS;
-    c.globalAlpha=1;c.clearRect(0,0,W,H);c.drawImage(base,0,0,W,H);drawMan(c,L,sc.man,t,D);drawSub(c,pages[Math.min(pages.length-1,Math.floor(f/N*pages.length))]);
+    c.globalAlpha=1;c.clearRect(0,0,W,H);c.save();camCtx(c,sc.cam,t,D);c.drawImage(base,0,0,W,H);drawMan(c,L,sc.man,t,D);c.restore();
+    drawFx(c,P.look);drawSub(c,pages[Math.min(pages.length-1,Math.floor(f/N*pages.length))],barPx(P.look,H,W));
     const fr=new VideoFrame(cv,{timestamp:Math.round(n*1e6/FPS),duration:Math.round(1e6/FPS)});enc.encode(fr,{keyFrame:n%(FPS*2)===0});fr.close();n++;
     if(err)throw err;
     if(enc.encodeQueueSize>6)await new Promise(r=>setTimeout(r,10));
