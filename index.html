@@ -118,6 +118,16 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
 .fb{left:0;right:0;background:#000}
 .fb.t{top:0}
 .fb.b{bottom:0}
+.trx{position:absolute;inset:0;pointer-events:none;z-index:40}
+.trx>div{position:absolute;top:0;bottom:0;background:#000}
+.trx>.ta{left:0;right:0}
+.trx>.tw1{left:0}
+.trx>.tw2{right:0}
+.ph{isolation:isolate}
+.glw{position:absolute;left:-25%;right:-25%;top:5%;bottom:-2%;border-radius:50%;background:radial-gradient(ellipse at center,var(--glc,rgba(25,198,255,.28)),transparent 68%);pointer-events:none;z-index:-1}
+.shd{position:absolute;left:12%;right:12%;bottom:-7px;height:16px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.45),transparent 70%);pointer-events:none;z-index:-1}
+.pt{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:25}
+.bg{transform-origin:480px 270px}
 /* العرض */
 #pres{--pn:#16232f;--pn2:#1d2d3c;--ln:rgba(255,255,255,.14);--ink:#fff;--mut:#9fb3c3;position:fixed;inset:0;background:radial-gradient(900px 500px at 50% 0%,#0f2233,#04080c);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;padding:10px;color-scheme:dark}
 #pres[hidden]{display:none}
@@ -304,7 +314,7 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
   <div class="grp"><h3>قالب جاهز</h3>
    <button class="btn pri" id="cPreset" style="width:100%;justify-content:center"><svg class="i"><use href="#i-film"/></svg><span>تطبيق الشكل السينمائي على كل المشاهد</span></button>
    <button class="btn" id="cOff" style="width:100%;justify-content:center;margin-top:8px"><span>إلغاء كل المؤثرات</span></button>
-   <p class="hint">القالب يضيف شريطًا سينمائيًا خفيفًا، وتدرّج ألوان أزرق وبرتقالي، وتعتيمًا جانبيًا، وحركة كاميرا مختلفة لكل مشهد. تقدر تعدّل أي شيء بعده.</p>
+   <p class="hint">القالب يضيف شريطًا سينمائيًا خفيفًا، وتدرّج ألوان أزرق وبرتقالي، وتعتيمًا جانبيًا، وظل وتوهج للمقدّم، وعمق، وجزيئات ضوء، وحركة كاميرا وانتقال مختلف لكل مشهد. تقدر تعدّل أي شيء بعده.</p>
   </div>
   <div class="grp"><h3>الشريط السينمائي</h3>
    <select id="cBars" aria-label="نسبة الشريط السينمائي"><option value="0">بدون</option><option value="1.85">1.85:1 (خفيف)</option><option value="2">2:1</option><option value="2.39">2.39:1 (سينمائي كامل)</option></select>
@@ -320,6 +330,24 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
    <div class="fr" style="margin-top:12px"><span>القوة <b id="cAV">12</b>٪</span><input type="range" id="cA" min="3" max="30" value="12" aria-label="قوة حركة الكاميرا"></div>
    <div class="grid2" style="margin-top:8px"><button class="btn" id="cPrev" style="justify-content:center"><svg class="i"><use href="#i-play"/></svg><span>معاينة</span></button><button class="btn" id="cAll" style="justify-content:center"><span>نسخ لكل المشاهد</span></button></div>
    <p class="hint">الكاميرا تتحرّك طوال مدة المشهد أثناء «عرض الدرس» وفي فيديو MP4. صور PNG تحفظ اللقطة الثابتة بالشريط والألوان فقط.</p>
+  </div>
+  <div class="grp"><h3>حياة المشهد (للمشروع كله)</h3>
+   <div class="fr"><span>ظل وتوهج خلف المقدّم</span><input type="checkbox" id="lGlow"></div>
+   <div class="fr"><span>عمق: الخلفية أبطأ من العناصر</span><input type="checkbox" id="lPar"></div>
+   <div class="fr"><span>جزيئات ضوء <b id="lDV">0</b></span><input type="range" id="lDust" min="0" max="100" value="0" aria-label="كثافة الجزيئات"></div>
+   <p class="hint">العمق يظهر عند وجود حركة كاميرا. الجزيئات خفيفة وتناسب الخلفيات الداكنة أكثر من الفاتحة.</p>
+  </div>
+  <div class="grp"><h3>الانتقال إلى هذا المشهد</h3>
+   <select id="tM" aria-label="نوع الانتقال"></select>
+   <div class="fr" style="margin-top:12px"><span>المدة <b id="tDV">0.8</b> ث</span><input type="range" id="tD" min="3" max="20" value="8" aria-label="مدة الانتقال"></div>
+   <div class="grid2" style="margin-top:8px"><button class="btn" id="tPrev" style="justify-content:center"><svg class="i"><use href="#i-play"/></svg><span>معاينة</span></button><button class="btn" id="tAll" style="justify-content:center"><span>نسخ لكل المشاهد</span></button></div>
+   <p class="hint">الانتقال يحصل في بداية المشهد: المشهد الأول يفتح به الفيديو، وغيره يفصل بين المشهد وما قبله. يظهر في «عرض الدرس» وفي فيديو MP4.</p>
+  </div>
+  <div class="grp"><h3>موسيقى الخلفية (للمشروع كله)</h3>
+   <div class="grid2"><label class="btn" style="justify-content:center"><svg class="i"><use href="#i-download"/></svg><span>رفع ملف</span><input type="file" accept="audio/*" id="muUp" hidden></label><button class="btn danger" id="muDel" style="justify-content:center"><svg class="i"><use href="#i-trash"/></svg><span>حذف</span></button></div>
+   <div class="fr" style="margin-top:12px"><span>مستوى الصوت <b id="muVV">25</b>٪</span><input type="range" id="muV" min="0" max="100" value="25" aria-label="مستوى الموسيقى"></div>
+   <button class="btn sm" id="muPrev" style="margin-top:4px"><svg class="i"><use href="#i-play"/></svg><span>تشغيل للتجربة</span></button>
+   <p class="hint" id="muInfo"></p>
   </div>
  </section>
  <section class="pane" data-t="export" hidden>
@@ -368,9 +396,9 @@ const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 const BARS=[0,1.85,2,2.39];
 const GR={none:['بدون',null],warm:['دافئ',['rgba(255,150,60,.22)','rgba(255,150,60,.22)']],cool:['بارد',['rgba(60,130,255,.2)','rgba(60,130,255,.2)']],cine:['سينمائي (أزرق وبرتقالي)',['rgba(0,150,175,.24)','rgba(255,140,50,.22)']],night:['ليلي',['rgba(12,28,95,.4)','rgba(12,28,95,.4)']]};
 const CAMS={none:'بدون حركة',in:'تقريب (Zoom In)',out:'ابتعاد (Zoom Out)',left:'تحريك لليسار',right:'تحريك لليمين',hand:'كاميرا محمولة (هزّة خفيفة)'};
-const defLook=()=>({bars:0,grade:'none',gs:70,vig:0});
+const defLook=()=>({bars:0,grade:'none',gs:70,vig:0,glow:false,par:false,dust:0});
 const clampN=(v,a,b,d)=>Number.isFinite(+v)?Math.max(a,Math.min(b,+v)):d;
-function normLook(l){l=l&&typeof l==='object'?l:{};return {bars:BARS.includes(+l.bars)?+l.bars:0,grade:has(GR,l.grade)?l.grade:'none',gs:clampN(l.gs,0,100,70),vig:clampN(l.vig,0,100,0)}}
+function normLook(l){l=l&&typeof l==='object'?l:{};return {bars:BARS.includes(+l.bars)?+l.bars:0,grade:has(GR,l.grade)?l.grade:'none',gs:clampN(l.gs,0,100,70),vig:clampN(l.vig,0,100,0),glow:l.glow===true,par:l.par===true,dust:clampN(l.dust,0,100,0)}}
 function normCam(c){c=c&&typeof c==='object'?c:{};return {m:has(CAMS,c.m)?c.m:'none',a:clampN(c.a,.03,.3,.12)}}
 const barPx=(look,H,W)=>look.bars>0?Math.max(0,(H-W/look.bars)/2):0;
 const ease=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
@@ -383,22 +411,61 @@ function camAt(cam,t,D){const a=cam.a,e=ease(D>0?Math.min(1,Math.max(0,t/D)):1);
   case 'right':{const s=1+a;return [s,(s-1)*480*.9*(1-2*e),0]}
   case 'hand':return [1.04,Math.sin(t/1000*1.7)*a*45,Math.cos(t/1000*2.3)*a*30];
   default:return [1,0,0]}}
-const camCss=(cam,t,D)=>{const [s,x,y]=camAt(cam,t,D);return 'translate('+x.toFixed(2)+'px,'+y.toFixed(2)+'px) scale('+s.toFixed(4)+')'};
+const camCssK=(cam,t,D,K)=>{const [s,x,y]=camAt(cam,t,D);return 'translate('+(x*K).toFixed(2)+'px,'+(y*K).toFixed(2)+'px) scale('+(1+(s-1)*K).toFixed(4)+')'};
+const camCss=(cam,t,D)=>camCssK(cam,t,D,1);
+/* ---------- حياة المشهد: توهج وظل المقدّم، جزيئات ضوء ---------- */
+const rgbOf=h=>{const n=parseInt(h.slice(1),16);return [n>>16,n>>8&255,n&255]};
+function underDom(e){const [r,g,b]=rgbOf(P.theme.pe);e.style.setProperty('--glc','rgba('+r+','+g+','+b+',.28)');e.insertAdjacentHTML('beforeend','<div class="glw"></div><div class="shd"></div>')}
+function dustPts(n,t){const o=[];for(let i=0;i<n;i++){const r=j=>{const v=Math.sin((i+1)*(j*12.9898+78.233))*43758.5453;return v-Math.floor(v)};
+ const y=540-((r(2)*540+t*(8+r(4)*14))%540),x=r(1)*960+Math.sin(t*.4+r(3)*6.283)*25,al=(.15+r(6)*.35)*(.65+.35*Math.sin(t*1.5+r(3)*9))*Math.sin(Math.PI*y/540);
+ o.push([x,y,.8+r(5)*2,al])}return o}
+function drawDust(c,sc,t,dust){const n=Math.round(dust*.6);if(n<=0)return;c.save();c.fillStyle='#dff6ff';
+ dustPts(n,t).forEach(p=>{c.globalAlpha=Math.max(0,p[3]);c.beginPath();c.arc(p[0]*sc,p[1]*sc,p[2]*sc,0,6.2832);c.fill()});c.restore()}
+function dustLoop(cv){const c=cv.getContext('2d');const tick=now=>{if(!cv.isConnected)return;c.clearRect(0,0,960,540);drawDust(c,1,now/1000,P.look.dust);requestAnimationFrame(tick)};requestAnimationFrame(tick)}
 /* طبقة المؤثرات فوق المشهد: تدرّج لوني، تعتيم جانبي، شريط أسود */
 function fxEl(look,edit){const f=div('fx');
  if(look.grade!=='none'&&GR[look.grade][1]){const g=div('fg'),c=GR[look.grade][1];g.style.background='linear-gradient(180deg,'+c[0]+','+c[1]+')';g.style.opacity=look.gs/100;f.appendChild(g)}
  if(look.vig>0){const v=div('fv');v.style.background='radial-gradient(ellipse at center,rgba(0,0,0,0) 52%,rgba(0,0,0,'+(look.vig/100*.75).toFixed(2)+') 100%)';f.appendChild(v)}
  if(look.bars>0){const h=barPx(look,540,960);['t','b'].forEach(s=>{const b=div('fb '+s);b.style.height=h.toFixed(1)+'px';if(edit)b.style.opacity='.55';f.appendChild(b)})}
  return f}
-/* تشغيل حركة الكاميرا على عنصر .cam (للعرض والمعاينة) */
-function playCam(root,sc,ms,reset){const el=root.querySelector('.cam'),cam=sc.cam;cancelAnimationFrame(ANIM.cam);
- if(!el)return;el.style.transform='';if(!cam||cam.m==='none')return;
+/* ---------- الانتقالات بين المشاهد ---------- */
+const TRS={none:'بدون (قطع مباشر)',black:'تلاشي من الأسود',white:'وميض أبيض',zoom:'تقريب ناعم',wipe:'ستارة تنفتح'};
+const normTr=t=>{t=t&&typeof t==='object'?t:{};return {m:has(TRS,t.m)?t.m:'none',d:clampN(t.d,.3,2,.8)}};
+/* حالة الانتقال بعد t ثانية من بداية المشهد: a شفافية الغطاء بلون c، z تكبير المحتوى، w نسبة الستارة المتبقية */
+function trAt(tr,t){const none={a:0,c:'0,0,0',z:1,w:0};if(!tr||tr.m==='none')return none;
+ const p=Math.min(1,Math.max(0,t/tr.d)),e=ease(p);
+ switch(tr.m){
+  case 'black':return {a:1-e,c:'0,0,0',z:1,w:0};
+  case 'white':return {a:1-e,c:'255,255,255',z:1,w:0};
+  case 'zoom':return {a:1-ease(Math.min(1,p*1.4)),c:'0,0,0',z:1.12-.12*e,w:0};
+  case 'wipe':return {a:0,c:'0,0,0',z:1,w:1-e};
+  default:return none}}
+/* تشغيل حركة الكاميرا والانتقال على المشهد (للعرض والمعاينة). الخلفية منفصلة لتتحرك أبطأ (عمق) */
+function playMotion(root,sc,ms,reset){cancelAnimationFrame(ANIM.cam);
+ const el=root.querySelector('.cam'),bgE=root.querySelector('.bg');if(!el)return;
+ const cam=sc.cam||{m:'none',a:.12},tr=sc.tr||{m:'none',d:.8},K=P.look.par?.6:1;
+ root.querySelectorAll('.trx').forEach(x=>x.remove());el.style.transform='';if(bgE)bgE.style.transform='';
+ const useTr=tr.m!=='none',useCam=cam.m!=='none';if(!useTr&&!useCam)return;
+ let ov=null,ta,w1,w2;
+ if(useTr){ov=div('trx');ta=div('ta');w1=div('tw1');w2=div('tw2');ov.appendChild(ta);ov.appendChild(w1);ov.appendChild(w2);root.appendChild(ov)}
  const my=ANIM.tok,t0=performance.now(),loop=cam.m==='hand'&&!reset;
+ const apply=t=>{const T=trAt(tr,t/1000),zs=T.z!==1?' scale('+T.z.toFixed(4)+')':'';
+  el.style.transform=(useCam?camCss(cam,t,ms):'')+zs;
+  if(bgE)bgE.style.transform=(useCam?camCssK(cam,t,ms,K):'')+zs;
+  if(ov){ta.style.background='rgba('+T.c+','+T.a.toFixed(3)+')';w1.style.width=(T.w*50).toFixed(2)+'%';w2.style.width=(T.w*50).toFixed(2)+'%'}};
  const tick=now=>{if(my!==ANIM.tok)return;const t=now-t0;
-  if(reset&&t>=ms){el.style.transform='';return}
-  el.style.transform=camCss(cam,t,ms);
+  if(reset&&t>=ms){el.style.transform='';if(bgE)bgE.style.transform='';if(ov)ov.remove();return}
+  apply(t);
   if(t<ms||loop)ANIM.cam=requestAnimationFrame(tick)};
- el.style.transform=camCss(cam,0,ms);ANIM.cam=requestAnimationFrame(tick)}
+ apply(0);ANIM.cam=requestAnimationFrame(tick)}
+
+/* ---------- موسيقى الخلفية ---------- */
+const DUCK=.4;
+let pMus=null,muA=null;
+function normMusic(m){return m&&typeof m==='object'&&isAud(m.data)&&+m.dur>0&&+m.dur<=900?{data:m.data,dur:+m.dur,vol:clampN(m.vol,0,100,25),name:String(m.name||'').slice(0,40)}:null}
+function musStart(){musStop();if(!P.music)return;try{pMus=new Audio(P.music.data);pMus.loop=true;pMus.volume=P.music.vol/100;pMus.play().catch(()=>{})}catch(_){pMus=null}}
+function musStop(){if(pMus){try{pMus.pause()}catch(_){}pMus=null}}
+function musDuck(sc){if(pMus&&P.music)pMus.volume=Math.min(1,P.music.vol/100*((sc.audio||(sc.notes||'').trim())?DUCK:1))}
 
 const BGS=[
  ['غابة','linear-gradient(180deg,#9fd3ee 0%,#cfe9d0 35%,#2f7a3a 60%,#16401d 100%)'],
@@ -419,7 +486,7 @@ const isAud=s=>typeof s==='string'&&s.length<4.2e6&&/^data:audio\/[\w.+-]+(;[\w=
 const isImg=s=>typeof s==='string'&&/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(s);
 const hexC=(c,d)=>typeof c==='string'&&/^#[0-9a-f]{6}$/i.test(c)?c:d,numC=(v,d)=>Number.isFinite(+v)?+v:d;
 const defMan=()=>({on:true,x:60,y:120,h:420,pose:'point',flip:false,img:null,anim:null,travel:0,sh:'#1b1b1b',pa:'#222222',sk:'#c98f65'});
-const newScene=name=>({id:uid(),name:name||'مشهد',bg:0,bgImg:null,notes:'',audio:null,man:defMan(),panels:[],globe:null,links:[],cam:{m:'none',a:.12}});
+const newScene=name=>({id:uid(),name:name||'مشهد',bg:0,bgImg:null,notes:'',audio:null,man:defMan(),panels:[],globe:null,links:[],cam:{m:'none',a:.12},tr:{m:'none',d:.8}});
 function fixScene(s){
  const o=Object.assign(newScene(),s||{});
  o.man=Object.assign(defMan(),(s&&s.man)||{});
@@ -434,7 +501,7 @@ function fixScene(s){
  o.panels=(Array.isArray(o.panels)?o.panels:[]).filter(p=>p&&p.id).map(p=>{const q=Object.assign({k:'p',txt:'',x:100,y:100,w:200,h:80},p);q.id=String(q.id).replace(/[^\w-]/g,'');if(!['p','t','l','i'].includes(q.k))q.k='p';q.txt=String(q.txt==null?'':q.txt);['x','y','w','h'].forEach(k=>q[k]=numC(q[k],{x:100,y:100,w:200,h:80}[k]));if(q.k==='i'&&!isImg(q.src))q.src='';return q});
  o.links=Array.isArray(o.links)?o.links:[];
  if(o.globe&&typeof o.globe==='object'){o.globe=Object.assign({x:760,y:230,s:180},o.globe);['x','y','s'].forEach(k=>o.globe[k]=numC(o.globe[k],{x:760,y:230,s:180}[k]))}else o.globe=null;
- o.cam=normCam(o.cam);
+ o.cam=normCam(o.cam);o.tr=normTr(o.tr);
  cleanLinks(o);return o}
 function cleanLinks(sc){const ids=new Set(sc.panels.map(p=>p.id));if(sc.globe)ids.add('globe');sc.links=sc.links.filter(l=>Array.isArray(l)&&ids.has(l[0])&&ids.has(l[1]))}
 function sample(){
@@ -447,10 +514,10 @@ function sample(){
  a.globe={x:760,y:230,s:180};a.links=[[r.id,s.id],[d.id,s.id],[s.id,'globe']];
  const b=newScene('ملخّص الدرس');b.bg=4;b.man.pose='open';b.notes='لنلخّص ما تعلّمناه: الغابات الموسمية لها موسمان، والجفاف فيها يستمر عدة أشهر، وتتميّز بتنوّع بيولوجي كبير.';
  b.panels.push({id:uid(),k:'t',txt:'ملخّص الدرس',x:280,y:16,w:400,h:60},{id:uid(),k:'l',txt:'• موسم أمطار وموسم جفاف\n• الجفاف من ٤ إلى ٦ أشهر\n• تنوّع بيولوجي كبير',x:500,y:120,w:400,h:170});
- return {theme:{pc:'#0a4682',pe:'#19c6ff'},look:defLook(),scenes:[a,b]}}
+ return {theme:{pc:'#0a4682',pe:'#19c6ff'},look:defLook(),music:null,scenes:[a,b]}}
 function loadLS(){try{const d=JSON.parse(localStorage.getItem(KEY));return norm(d)}catch(e){return null}}
 function norm(d){if(!d||!Array.isArray(d.scenes)||!d.scenes.length)return null;const t=d.theme||{};
- return {theme:{pc:/^#[0-9a-f]{6}$/i.test(t.pc)?t.pc:'#0a4682',pe:/^#[0-9a-f]{6}$/i.test(t.pe)?t.pe:'#19c6ff'},look:normLook(d.look),scenes:d.scenes.map(fixScene)}}
+ return {theme:{pc:/^#[0-9a-f]{6}$/i.test(t.pc)?t.pc:'#0a4682',pe:/^#[0-9a-f]{6}$/i.test(t.pe)?t.pe:'#19c6ff'},look:normLook(d.look),music:normMusic(d.music),scenes:d.scenes.map(fixScene)}}
 let P=loadLS()||sample(),cur=0,linkMode=false,sel=null;
 const S=()=>P.scenes[cur];
 let tm;function touch(){clearTimeout(tm);tm=setTimeout(()=>{paintThumb(cur);try{localStorage.setItem(KEY,JSON.stringify(P));$('amsg').textContent='● حُفظ تلقائيًا'}catch(e){$('amsg').textContent='تعذّر الحفظ التلقائي — احفظ المشروع كملف'}},500)}
@@ -553,15 +620,16 @@ function playAnim(root,sc,ms,travel){
   ANIM.raf=requestAnimationFrame(tick)};
  box.style.transform=`scale(${sx},1)`;ANIM.raf=requestAnimationFrame(tick)}
 function render(sc,root,edit,anim){
- root.innerHTML='';root.className='stage'+(edit?'':' view');
+ root.innerHTML='';root.className='stage'+(edit?'':' view');root.style.background=sc._noBg?'transparent':'';
  const cam=div('cam');root.appendChild(cam);
  let d=0;const A=e=>{if(anim){e.classList.add('in');e.style.animationDelay=(d+=.55)+'s'}};
- const bg=div('bg');bg.style.backgroundImage=sc.bgImg?'url("'+sc.bgImg+'")':BGS[sc.bg][1];cam.appendChild(bg);
+ const bg=div('bg');bg.style.backgroundImage=sc.bgImg?'url("'+sc.bgImg+'")':BGS[sc.bg][1];if(!sc._noBg)root.insertBefore(bg,cam);
  const L=document.createElementNS(NS,'svg');L.setAttribute('class','links');L.setAttribute('viewBox','0 0 960 540');cam.appendChild(L);
  const m=sc.man;
  if(m.on){const e=div('ph');e.style.cssText=`left:${m.x}px;top:${m.y}px;height:${m.h}px`;
   if(clipOk(m.anim))mkAnim(e,m,CLIPS[m.anim]);
   else if(m.img){const im=new Image();im.alt='';im.src=m.img;if(m.flip)im.className='flip';e.appendChild(im)}else e.innerHTML=manSVG(m);
+  if(P.look.glow&&!NOFX)underDom(e);
   A(e);cam.appendChild(e);if(edit)drag(root,sc,e,e,m)}
  sc.panels.forEach(p=>{const e=mkPanel(p,sc,root,edit);A(e);cam.appendChild(e)});
  if(sc.globe){const g=sc.globe,e=div('globe');e.dataset.id='globe';e.style.cssText=`left:${g.x}px;top:${g.y}px;width:${g.s}px;height:${g.s}px`;
@@ -569,6 +637,7 @@ function render(sc,root,edit,anim){
  drawLinks(root,sc);
  if(anim){L.classList.add('in');L.style.animationDelay=(d+.3)+'s'}
  if(!NOFX)root.appendChild(fxEl(P.look,edit));
+ if(!NOFX&&P.look.dust>0&&(root.id==='stage'||root.id==='prStage')){const pc=document.createElement('canvas');pc.width=960;pc.height=540;pc.className='pt';root.appendChild(pc);dustLoop(pc)}
  if(edit&&root===st)watch(root,sc)}
 const redraw=()=>{stopAnim();setPlayBtn();render(S(),st,true);touch()};
 
@@ -671,7 +740,7 @@ $('openJ').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)
  try{const d=norm(JSON.parse(await f.text()));if(!d)throw 0;P=d;cur=0;selectScene(0);touch();$('msg').textContent='تم فتح المشروع.'}
  catch(_){$('msg').textContent='الملف غير صالح كمشروع.'}};
 $('newP').onclick=()=>{if(!confirm('بدء مشروع جديد؟ سيُستبدل المشروع الحالي (احفظه أولًا كملف إن أردت).'))return;
- const s=newScene('مشهد 1');s.panels.push({id:uid(),k:'t',txt:'عنوان الدرس',x:280,y:16,w:400,h:60});P={theme:{pc:'#0a4682',pe:'#19c6ff'},look:defLook(),scenes:[s]};selectScene(0);touch()};
+ const s=newScene('مشهد 1');s.panels.push({id:uid(),k:'t',txt:'عنوان الدرس',x:280,y:16,w:400,h:60});P={theme:{pc:'#0a4682',pe:'#19c6ff'},look:defLook(),music:null,scenes:[s]};selectScene(0);touch()};
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();$('saveJ').click()}});
 
 /* السمة والإشعارات */
@@ -762,9 +831,9 @@ let pAud=null;
 function stopAll(){ptok++;clearTimeout(ptimer);stopAnim();if(pAud){try{pAud.pause()}catch(_){}pAud=null}try{speechSynthesis.cancel()}catch(_){}}
 function playScene(i){stopAll();const my=ptok;pi=i;const sc=P.scenes[i];
  render(sc,prSt,false,true);$('sub').textContent=sc.notes||'';$('pcount').textContent=(i+1)+' / '+P.scenes.length;
- playAnim(prSt,sc,sceneMs(sc),true);playCam(prSt,sc,sceneMs(sc));
+ playAnim(prSt,sc,sceneMs(sc),true);playMotion(prSt,sc,sceneMs(sc));musDuck(sc);
  $('pprog').innerHTML=P.scenes.map((_,k)=>'<i class="'+(k<=i?'d':'')+'"></i>').join('');
- const next=()=>{if(my!==ptok)return;if(pi<P.scenes.length-1)playScene(pi+1);else $('pmsg').textContent='انتهى الدرس.'};
+ const next=()=>{if(my!==ptok)return;if(pi<P.scenes.length-1)playScene(pi+1);else{$('pmsg').textContent='انتهى الدرس.';musStop()}};
  const fb=sceneMs(sc),v=arVoice();
  $('pmsg').textContent='';
  if(sc.audio){const a=new Audio(sc.audio.data);pAud=a;a.onended=()=>{if(my===ptok)ptimer=setTimeout(next,900)};a.onerror=()=>{if(my===ptok)ptimer=setTimeout(next,fb)};
@@ -772,15 +841,15 @@ function playScene(i){stopAll();const my=ptok;pi=i;const sc=P.scenes[i];
  else if(sc.notes.trim()&&v&&window.speechSynthesis){const u=new SpeechSynthesisUtterance(sc.notes);u.voice=v;u.lang=v.lang;
   u.onend=()=>{if(my===ptok)ptimer=setTimeout(next,1200)};u.onerror=()=>{if(my===ptok)ptimer=setTimeout(next,fb)};speechSynthesis.speak(u)}
  else{if(sc.notes.trim())$('pmsg').textContent='لا يوجد صوت عربي في متصفحك؛ يتقدّم العرض بالتوقيت مع إظهار الشرح كنص.';ptimer=setTimeout(next,fb)}}
-function openPres(){paused=false;$('pPause').textContent='⏸ إيقاف';pr.hidden=false;document.body.style.overflow='hidden';fitPres();
+function openPres(){paused=false;$('pPause').textContent='⏸ إيقاف';pr.hidden=false;document.body.style.overflow='hidden';fitPres();if(muA){try{muA.pause()}catch(_){}muA=null}musStart();
  try{const p=pr.requestFullscreen&&pr.requestFullscreen();if(p&&p.catch)p.catch(()=>{})}catch(_){}
  playScene(cur)}
-function closePres(){stopAll();pr.hidden=true;prSt.innerHTML='';document.body.style.overflow='';
+function closePres(){stopAll();musStop();pr.hidden=true;prSt.innerHTML='';document.body.style.overflow='';
  try{if(document.fullscreenElement){const p=document.exitFullscreen();if(p&&p.catch)p.catch(()=>{})}}catch(_){}}
 $('play').onclick=openPres;$('pExit').onclick=closePres;
 $('pNext').onclick=()=>{if(pi<P.scenes.length-1){paused=false;$('pPause').textContent='⏸ إيقاف';playScene(pi+1)}};
 $('pPrev').onclick=()=>{if(pi>0){paused=false;$('pPause').textContent='⏸ إيقاف';playScene(pi-1)}};
-$('pPause').onclick=()=>{paused=!paused;if(paused){stopAll();$('pPause').textContent='▶ متابعة'}else{$('pPause').textContent='⏸ إيقاف';playScene(pi)}};
+$('pPause').onclick=()=>{paused=!paused;if(paused){stopAll();if(pMus)pMus.pause();$('pPause').textContent='▶ متابعة'}else{$('pPause').textContent='⏸ إيقاف';if(pMus)pMus.play().catch(()=>{});playScene(pi)}};
 document.addEventListener('keydown',e=>{if(pr.hidden)return;
  if(e.key==='ArrowLeft'||e.key==='PageDown'||e.key===' '){e.preventDefault();$('pNext').click()}
  else if(e.key==='ArrowRight'||e.key==='PageUp'){e.preventDefault();$('pPrev').click()}
@@ -792,7 +861,9 @@ Object.keys(CAMS).forEach(k=>{const o=document.createElement('option');o.value=k
 function syncCine(){const l=P.look,c=S().cam;
  $('cBars').value=String(l.bars);$('cGrade').value=l.grade;
  $('cGs').value=l.gs;$('cGsV').textContent=l.gs;$('cVig').value=l.vig;$('cVigV').textContent=l.vig;
- $('cCam').value=c.m;$('cA').value=Math.round(c.a*100);$('cAV').textContent=Math.round(c.a*100)}
+ $('cCam').value=c.m;$('cA').value=Math.round(c.a*100);$('cAV').textContent=Math.round(c.a*100);
+ $('lGlow').checked=l.glow;$('lPar').checked=l.par;$('lDust').value=l.dust;$('lDV').textContent=l.dust;
+ const t=S().tr;$('tM').value=t.m;$('tD').value=Math.round(t.d*10);$('tDV').textContent=t.d.toFixed(1);syncMusic()}
 let lkT;function lookChanged(){redraw();clearTimeout(lkT);lkT=setTimeout(()=>P.scenes.forEach((_,i)=>paintThumb(i)),150)}
 $('cBars').onchange=e=>{P.look.bars=+e.target.value;lookChanged()};
 $('cGrade').onchange=e=>{P.look.grade=e.target.value;lookChanged()};
@@ -800,11 +871,41 @@ $('cGs').oninput=e=>{P.look.gs=+e.target.value;$('cGsV').textContent=e.target.va
 $('cVig').oninput=e=>{P.look.vig=+e.target.value;$('cVigV').textContent=e.target.value;lookChanged()};
 $('cCam').onchange=e=>{S().cam.m=e.target.value;touch()};
 $('cA').oninput=e=>{S().cam.a=+e.target.value/100;$('cAV').textContent=e.target.value;touch()};
-$('cPrev').onclick=()=>{const sc=S();if(sc.cam.m==='none'){$('msg').textContent='اختر حركة كاميرا أولًا.';return}playCam(st,sc,4000,true)};
+$('cPrev').onclick=()=>{const sc=S();if(sc.cam.m==='none'){$('msg').textContent='اختر حركة كاميرا أولًا.';return}playMotion(st,sc,4000,true)};
 $('cAll').onclick=()=>{const c=S().cam;P.scenes.forEach(s=>s.cam={m:c.m,a:c.a});touch();$('msg').textContent='تم نسخ حركة الكاميرا لكل المشاهد.'};
 const CYC=['in','left','out','right'];
-$('cPreset').onclick=()=>{P.look={bars:1.85,grade:'cine',gs:60,vig:35};P.scenes.forEach((s,i)=>s.cam={m:CYC[i%4],a:.1});lookChanged();syncCine();$('msg').textContent='تم تطبيق الشكل السينمائي. جرّب «عرض الدرس».'};
-$('cOff').onclick=()=>{P.look=defLook();P.scenes.forEach(s=>s.cam={m:'none',a:.12});lookChanged();syncCine()};
+$('cPreset').onclick=()=>{P.look={bars:1.85,grade:'cine',gs:60,vig:35,glow:true,par:true,dust:30};P.scenes.forEach((s,i)=>{s.cam={m:CYC[i%4],a:.1};s.tr=i?{m:'zoom',d:.7}:{m:'black',d:.9}});lookChanged();syncCine();$('msg').textContent='تم تطبيق الشكل السينمائي. جرّب «عرض الدرس».'};
+$('cOff').onclick=()=>{P.look=defLook();P.scenes.forEach(s=>{s.cam={m:'none',a:.12};s.tr={m:'none',d:.8}});lookChanged();syncCine()};
+
+$('lGlow').onchange=e=>{P.look.glow=e.target.checked;lookChanged()};
+$('lPar').onchange=e=>{P.look.par=e.target.checked;touch()};
+$('lDust').oninput=e=>{P.look.dust=+e.target.value;$('lDV').textContent=e.target.value;lookChanged()};
+/* الانتقالات */
+Object.keys(TRS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=TRS[k];$('tM').appendChild(o)});
+$('tM').onchange=e=>{S().tr.m=e.target.value;touch()};
+$('tD').oninput=e=>{const d=+e.target.value/10;S().tr.d=d;$('tDV').textContent=d.toFixed(1);touch()};
+$('tPrev').onclick=()=>{const sc=S();if(sc.tr.m==='none'){$('msg').textContent='اختر نوع الانتقال أولًا.';return}playMotion(st,sc,Math.max(2500,sc.tr.d*1000+800),true)};
+$('tAll').onclick=()=>{const t=S().tr;P.scenes.forEach(s=>s.tr={m:t.m,d:t.d});touch();$('msg').textContent='تم نسخ الانتقال لكل المشاهد.'};
+/* الموسيقى */
+function syncMusic(){const m=P.music;
+ $('muV').value=m?m.vol:25;$('muVV').textContent=m?m.vol:25;
+ $('muDel').disabled=!m;$('muPrev').disabled=!m;
+ $('muPrev').querySelector('span').textContent=muA?'إيقاف':'تشغيل للتجربة';
+ $('muInfo').textContent=m?('«'+(m.name||'موسيقى')+'» ('+fmtT(m.dur)+'). تتكرر تلقائيًا وتنخفض أثناء الشرح، وتدخل في فيديو MP4 مع تلاشي في البداية والنهاية.'):'لا توجد موسيقى. ارفع ملف mp3 أو m4a أو wav (حتى 3 ميغابايت تقريبًا). تأكد أن لك حق استخدامها.'}
+async function setMusic(f){
+ if(f.size>3.1e6){$('msg').textContent='الملف كبير (الحد حوالي 3 ميغابايت). اختر ملفًا أقصر أو أخف.';return}
+ try{const data=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)});
+  if(!isAud(data))throw new Error('type');
+  const buf=await decodeAud(data);if(!(buf.duration>0)||buf.duration>900)throw new Error('dur');
+  if(muA){try{muA.pause()}catch(_){}muA=null}
+  P.music={data,dur:buf.duration,vol:P.music?P.music.vol:25,name:String(f.name||'').slice(0,40)};touch();$('msg').textContent=''
+ }catch(e){$('msg').textContent='تعذّر قراءة الملف. جرّب mp3 أو m4a أو wav.'}
+ syncMusic()}
+$('muUp').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)setMusic(f)};
+$('muDel').onclick=()=>{if(muA){try{muA.pause()}catch(_){}muA=null}P.music=null;touch();syncMusic()};
+$('muV').oninput=e=>{if(!P.music)return;P.music.vol=+e.target.value;$('muVV').textContent=e.target.value;if(muA)muA.volume=P.music.vol/100;touch()};
+$('muPrev').onclick=()=>{if(muA){try{muA.pause()}catch(_){}muA=null;syncMusic();return}if(!P.music)return;
+ muA=new Audio(P.music.data);muA.volume=P.music.vol/100;muA.onended=()=>{muA=null;syncMusic()};muA.onerror=()=>{muA=null;syncMusic()};muA.play().catch(()=>{muA=null;syncMusic()});syncMusic()};
 
 /* ---------- البدء ---------- */
 selectScene(0);fitEditor();
@@ -914,22 +1015,38 @@ async function layer(sc){const m=sc.man;if(!m.on)return null;
  const src=m.img||'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(manSVG(m).replace('<svg ','<svg width="280" height="420" '));
  return {still:await load(src),svg:!m.img}}
 function drawMan(c,L,m,t,D){if(!L)return;
- if(L.still){const h=m.h*k,w=h*L.still.naturalWidth/L.still.naturalHeight;c.save();c.translate((m.x*k)+w/2,0);if(m.flip&&!L.svg)c.scale(-1,1);c.drawImage(L.still,-w/2,m.y*k,w,h);c.restore();return}
+ if(L.still){const h=m.h*k,w=h*L.still.naturalWidth/L.still.naturalHeight;under(c,m.x*k+w/2,w,m);c.save();c.translate((m.x*k)+w/2,0);if(m.flip&&!L.svg)c.scale(-1,1);c.drawImage(L.still,-w/2,m.y*k,w,h);c.restore();return}
  const {clip,im}=L,st=clip.steps,n=st.length,T=st.reduce((s,x)=>s+x[1],0),dist=m.travel||0,p=Math.min(1,t/D);
  const turn=clip.face==='right'?dist<0:clip.face==='left'?dist>0:false,sx=(m.flip!==turn)?-1:1;
  let l=t%T,i=0;if(dist!==0&&p>=1&&clip.walk)l=0;else for(;i<n-1;i++){if(l<st[i][1])break;l-=st[i][1]}
  const cur=im[st[i][0]],prev=im[st[(i+n-1)%n][0]],a=clip.fade?Math.min(1,l/clip.fade):1;
  const bw=m.h*FRM.CW/FRM.BH*k,bh=m.h*FRM.CH/FRM.BH*k;
+ under(c,(m.x+dist*p)*k+bw/2,bw,m);
  c.save();c.translate((m.x+dist*p)*k+bw/2,(m.y+m.h)*k);c.scale(sx,1+.012*Math.sin(t/1000*2.4));
  if(a<1&&prev!==cur)c.drawImage(prev,-bw/2,-bh,bw,bh);
  c.globalAlpha=a;c.drawImage(cur,-bw/2,-bh,bw,bh);c.restore()}
 /* حركة الكاميرا على اللوحة (المشهد والمقدّم معًا، دون الترجمة والمؤثرات) */
-function camCtx(c,cam,t,D){const [s,x,y]=camAt(cam||{m:'none',a:.12},t,D);c.translate(W/2+x*k,H/2+y*k);c.scale(s,s);c.translate(-W/2,-H/2)}
+function camCtx(c,cam,t,D,K){K=K||1;const [s,x,y]=camAt(cam||{m:'none',a:.12},t,D),z=1+(s-1)*K;c.translate(W/2+x*k*K,H/2+y*k*K);c.scale(z,z);c.translate(-W/2,-H/2)}
+function zoomT(c,T){if(T.z!==1){c.translate(W/2,H/2);c.scale(T.z,T.z);c.translate(-W/2,-H/2)}}
+/* توهج وظل تحت المقدّم، بنفس مواصفات المعاينة */
+function under(c,cx,w,m){if(!P.look.glow)return;const feet=(m.y+m.h)*k,h=m.h*k,[r,g,b]=rgbOf(P.theme.pe);
+ c.save();c.translate(cx,feet-h*.465);c.scale(w*.75,h*.485);let q=c.createRadialGradient(0,0,0,0,0,1);q.addColorStop(0,'rgba('+r+','+g+','+b+',.28)');q.addColorStop(.96,'rgba('+r+','+g+','+b+',0)');c.fillStyle=q;c.fillRect(-1,-1,2,2);c.restore();
+ c.save();c.translate(cx,feet-1*k);c.scale(w*.38,8*k);q=c.createRadialGradient(0,0,0,0,0,1);q.addColorStop(0,'rgba(0,0,0,.45)');q.addColorStop(.99,'rgba(0,0,0,0)');c.fillStyle=q;c.fillRect(-1,-1,2,2);c.restore()}
 /* المؤثرات: تدرّج لوني، تعتيم جانبي، شريط أسود، بنفس مواصفات المعاينة */
 function drawFx(c,look){
  if(look.grade!=='none'&&GR[look.grade][1]){const cs=GR[look.grade][1],g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,cs[0]);g.addColorStop(1,cs[1]);c.save();c.globalAlpha=look.gs/100;c.fillStyle=g;c.fillRect(0,0,W,H);c.restore()}
  if(look.vig>0){c.save();c.translate(W/2,H/2);c.scale(W/2*Math.SQRT2,H/2*Math.SQRT2);const g=c.createRadialGradient(0,0,0,0,0,1);g.addColorStop(.52,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+(look.vig/100*.75).toFixed(2)+')');c.fillStyle=g;c.fillRect(-1.5,-1.5,3,3);c.restore()}
  const h=barPx(look,H,W);if(h>0){c.fillStyle='#000';c.fillRect(0,0,W,h);c.fillRect(0,H-h,W,h)}}
+/* غطاء الانتقال: لون بشفافية متناقصة، أو ستارة سوداء تنفتح من المنتصف */
+function drawTr(c,T){if(T.a>0){c.save();c.fillStyle='rgba('+T.c+','+T.a.toFixed(3)+')';c.fillRect(0,0,W,H);c.restore()}
+ if(T.w>0){c.save();c.fillStyle='#000';c.fillRect(0,0,W/2*T.w,H);c.fillRect(W-W/2*T.w,0,W/2*T.w,H);c.restore()}}
+/* دمج الموسيقى في مقطع الصوت: تكرار، خفض أثناء الشرح، تلاشٍ في بداية الفيديو ونهايته */
+function mixMusic(buf,g0,MU,narr,TOT){const n=buf.length,m=MU.pcm,L=m.length,rs=Math.round(.15*SR),fo=1.5*SR,fi=1*SR;
+ for(let i=0;i<n;i++){const g=g0+i;let env=1;
+  if(narr){const r=Math.min((i-(narr[0]-rs))/rs,(narr[1]+rs-i)/rs);env=1-(1-DUCK)*Math.max(0,Math.min(1,r))}
+  const a=Math.min(1,g/fi)*Math.max(0,Math.min(1,(TOT-g)/fo));
+  buf[i]+=m[g%L]*MU.gain*env*a}
+ for(let i=0;i<n;i++){if(buf[i]>1)buf[i]=1;else if(buf[i]<-1)buf[i]=-1}}
 function drawSub(c,pg,lift){if(!pg)return;c.save();c.direction='rtl';c.textAlign='center';c.textBaseline='middle';c.font='700 30px Cairo,Tahoma,sans-serif';
  const lh=44,h=pg.length*lh+24,w=Math.min(1160,Math.max(...pg.map(x=>c.measureText(x).width))+60),x=(W-w)/2,y=H-h-24-(lift||0);
  c.fillStyle='rgba(5,10,15,.7)';c.strokeStyle='rgba(255,255,255,.14)';c.beginPath();c.roundRect?c.roundRect(x,y,w,h,18):c.rect(x,y,w,h);c.fill();c.stroke();
@@ -945,8 +1062,10 @@ async function run(){
  b.disabled=true;let err=null;
  try{
   try{await document.fonts.load('700 30px Cairo')}catch(_){}
-  const AC={codec:'mp4a.40.2',sampleRate:SR,numberOfChannels:1,bitrate:96000};let useA=P.scenes.some(s=>s.audio),noA=false;
+  const AC={codec:'mp4a.40.2',sampleRate:SR,numberOfChannels:1,bitrate:96000};let useA=P.scenes.some(s=>s.audio)||!!P.music,noA=false;
   if(useA){try{useA=!!(window.AudioEncoder&&window.AudioData&&window.OfflineAudioContext&&(await AudioEncoder.isConfigSupported(AC)).supported)}catch(_){useA=false}if(!useA)noA=true}
+  let MU=null;const TOT=P.scenes.reduce((a,x)=>a+Math.round(Math.ceil(dur(x)/1000*FPS)/FPS*SR),0);
+  if(useA&&P.music){say('تجهيز الموسيقى…');MU={pcm:await pcmOf(P.music),gain:P.music.vol/100}}
   const mux=new Mp4Muxer.Muxer(Object.assign({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'},useA?{audio:{codec:'aac',numberOfChannels:1,sampleRate:SR}}:{}));
   let aenc=null,aerr=null,aN=0;
   if(useA){aenc=new AudioEncoder({output:(ch,meta)=>mux.addAudioChunk(ch,meta),error:e=>{aerr=e}});aenc.configure(AC)}
@@ -954,19 +1073,25 @@ async function run(){
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),subs=$$('mp4Sub').checked;let n=0;
   for(let s=0;s<P.scenes.length;s++){
    const sc=P.scenes[s],D=dur(sc);say('المشهد '+(s+1)+' من '+P.scenes.length+': تجهيز…');
-   let base;NOFX=true;try{base=await snap(Object.assign({},sc,{man:Object.assign({},sc.man,{on:false})}))}finally{NOFX=false}
+   let base,baseBg=null;NOFX=true;try{const noMan=Object.assign({},sc.man,{on:false});
+    if(P.look.par){baseBg=await snap(Object.assign({},sc,{man:noMan,panels:[],globe:null,links:[]}));base=await snap(Object.assign({},sc,{man:noMan,_noBg:true}))}
+    else base=await snap(Object.assign({},sc,{man:noMan}))}finally{NOFX=false}
    const L=await layer(sc);
    let pages=[];if(subs&&(sc.notes||'').trim()){c.font='700 30px Cairo,Tahoma,sans-serif';c.direction='rtl';const ls=wrap(c,sc.notes.trim(),1090);for(let i=0;i<ls.length;i+=2)pages.push(ls.slice(i,i+2))}
    const N=Math.ceil(D/1000*FPS);
    if(useA){say('المشهد '+(s+1)+' من '+P.scenes.length+': ترميز الصوت…');
     const total=Math.round(N/FPS*SR),buf=new Float32Array(total);
-    if(sc.audio){const pcm=await pcmOf(sc.audio),off=Math.round(.2*SR),len=Math.min(pcm.length,total-off);if(len>0)buf.set(pcm.subarray(0,len),off)}
+    let narr=null;if(sc.audio){const pcm=await pcmOf(sc.audio),off=Math.round(.2*SR),len=Math.min(pcm.length,total-off);if(len>0){buf.set(pcm.subarray(0,len),off);narr=[off,off+len]}}
+    if(MU)mixMusic(buf,aN,MU,narr,TOT);
     for(let i=0;i<total;i+=4800){const len=Math.min(4800,total-i),ad=new AudioData({format:'f32-planar',sampleRate:SR,numberOfFrames:len,numberOfChannels:1,timestamp:Math.round((aN+i)/SR*1e6),data:buf.subarray(i,i+len)});
      aenc.encode(ad);ad.close();if(aerr)throw aerr;if(aenc.encodeQueueSize>20)await new Promise(r=>setTimeout(r,5))}
     aN+=total}
    for(let f=0;f<N;f++){const t=f*1000/FPS;
-    c.globalAlpha=1;c.clearRect(0,0,W,H);c.save();camCtx(c,sc.cam,t,D);c.drawImage(base,0,0,W,H);drawMan(c,L,sc.man,t,D);c.restore();
-    drawFx(c,P.look);drawSub(c,pages[Math.min(pages.length-1,Math.floor(f/N*pages.length))],barPx(P.look,H,W));
+    const T=trAt(sc.tr,t/1000);
+    c.globalAlpha=1;c.clearRect(0,0,W,H);
+    if(baseBg){c.save();camCtx(c,sc.cam,t,D,.6);zoomT(c,T);c.drawImage(baseBg,0,0,W,H);c.restore()}
+    c.save();camCtx(c,sc.cam,t,D,1);zoomT(c,T);c.drawImage(base,0,0,W,H);drawMan(c,L,sc.man,t,D);c.restore();
+    drawDust(c,k,n/FPS,P.look.dust);drawFx(c,P.look);drawSub(c,pages[Math.min(pages.length-1,Math.floor(f/N*pages.length))],barPx(P.look,H,W));drawTr(c,T);
     const fr=new VideoFrame(cv,{timestamp:Math.round(n*1e6/FPS),duration:Math.round(1e6/FPS)});enc.encode(fr,{keyFrame:n%(FPS*2)===0});fr.close();n++;
     if(err)throw err;
     if(enc.encodeQueueSize>6)await new Promise(r=>setTimeout(r,10));
