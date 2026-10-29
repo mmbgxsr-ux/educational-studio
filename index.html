@@ -285,7 +285,10 @@ select{font:inherit;font-size:14px;width:100%;background:var(--pn);color:var(--i
    <button class="btn pri" id="png"><svg class="i"><use href="#i-download"/></svg><span>المشهد الحالي PNG</span></button>
    <button class="btn" id="zip"><svg class="i"><use href="#i-download"/></svg><span>كل المشاهد ZIP</span></button>
   </div>
-  <p class="hint">ملف ZIP يضم صورة لكل مشهد، ونص الشرح، وملف المشروع. العرض يعمل داخل المتصفح ولا يُنتج فيديو. احفظ المشروع كملف للاحتفاظ بنسخة كاملة (Ctrl+S).</p>
+  <div class="grp stack"><button class="btn pri" id="mp4"><svg class="i"><use href="#i-download"/></svg><span>فيديو MP4 (كل المشاهد)</span></button>
+<div class="fr"><span>إدراج الشرح كترجمة</span><input type="checkbox" id="mp4Sub" checked></div></div>
+<p class="hint">الفيديو 1280×720 بدون صوت (المتصفح لا يسمح بتسجيل صوت القراءة)، ومدة كل مشهد كمدّة العرض. يحتاج Chrome أو Edge أو Safari حديثًا، ويعمل من GitHub Pages لا من فتح الملف مباشرة.</p>
+<p class="hint">ملف ZIP يضم صورة لكل مشهد، ونص الشرح، وملف المشروع. العرض يعمل داخل المتصفح ولا يُنتج فيديو. احفظ المشروع كملف للاحتفاظ بنسخة كاملة (Ctrl+S).</p>
  </section>
 </aside>
 </div>
@@ -326,20 +329,23 @@ const POSE_N={idle:'واقف',point:'يشير',open:'يشرح',wave:'يحيّي'
 
 /* ---------- الحالة ---------- */
 const uid=()=>'e'+Math.random().toString(36).slice(2,8);
-const isImg=s=>typeof s==='string'&&/^data:image\//.test(s);
+const isImg=s=>typeof s==='string'&&/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(s);
+const hexC=(c,d)=>typeof c==='string'&&/^#[0-9a-f]{6}$/i.test(c)?c:d,numC=(v,d)=>Number.isFinite(+v)?+v:d;
 const defMan=()=>({on:true,x:60,y:120,h:420,pose:'point',flip:false,img:null,anim:null,travel:0,sh:'#1b1b1b',pa:'#222222',sk:'#c98f65'});
 const newScene=name=>({id:uid(),name:name||'مشهد',bg:0,bgImg:null,notes:'',man:defMan(),panels:[],globe:null,links:[]});
 function fixScene(s){
  const o=Object.assign(newScene(),s||{});
  o.man=Object.assign(defMan(),(s&&s.man)||{});
  if(!isImg(o.man.img))o.man.img=null;
+ o.man.sh=hexC(o.man.sh,'#1b1b1b');o.man.pa=hexC(o.man.pa,'#222222');o.man.sk=hexC(o.man.sk,'#c98f65');
+ ['x','y','h'].forEach(k=>o.man[k]=numC(o.man[k],defMan()[k]));
  if(!POSES[o.man.pose])o.man.pose='idle';
  if(!clipOk(o.man.anim))o.man.anim=null;
  o.man.travel=Math.max(-700,Math.min(700,+o.man.travel||0));
  o.bg=BGS[o.bg]?o.bg:0;if(!isImg(o.bgImg))o.bgImg=null;
- o.panels=(Array.isArray(o.panels)?o.panels:[]).filter(p=>p&&p.id).map(p=>{const q=Object.assign({k:'p',txt:'',x:100,y:100,w:200,h:80},p);if(q.k==='i'&&!isImg(q.src))q.src='';return q});
+ o.panels=(Array.isArray(o.panels)?o.panels:[]).filter(p=>p&&p.id).map(p=>{const q=Object.assign({k:'p',txt:'',x:100,y:100,w:200,h:80},p);q.id=String(q.id).replace(/[^\w-]/g,'');if(!['p','t','l','i'].includes(q.k))q.k='p';q.txt=String(q.txt==null?'':q.txt);['x','y','w','h'].forEach(k=>q[k]=numC(q[k],{x:100,y:100,w:200,h:80}[k]));if(q.k==='i'&&!isImg(q.src))q.src='';return q});
  o.links=Array.isArray(o.links)?o.links:[];
- if(o.globe&&typeof o.globe==='object')o.globe=Object.assign({x:760,y:230,s:180},o.globe);else o.globe=null;
+ if(o.globe&&typeof o.globe==='object'){o.globe=Object.assign({x:760,y:230,s:180},o.globe);['x','y','s'].forEach(k=>o.globe[k]=numC(o.globe[k],{x:760,y:230,s:180}[k]))}else o.globe=null;
  cleanLinks(o);return o}
 function cleanLinks(sc){const ids=new Set(sc.panels.map(p=>p.id));if(sc.globe)ids.add('globe');sc.links=sc.links.filter(l=>Array.isArray(l)&&ids.has(l[0])&&ids.has(l[1]))}
 function sample(){
@@ -744,6 +750,63 @@ function gif(fr,w,h,dl_){const o=[],w16=v=>o.push(v&255,v>>8&255);
 $('xGif').onclick=()=>{if(!need())return;say('جارٍ إنشاء GIF…');setTimeout(()=>{dl(gif(seq().map(i=>out[i]),W,H,Math.round(100/K.fps)),M[cur].n+'.gif');say('تم إنشاء GIF.')},30)};
 $('aCopy').onclick=async()=>{try{await navigator.clipboard.writeText($('aPr').value);say('تم نسخ البرومت.')}catch(_){$('aPr').select();say('حدّد النص وانسخه يدويًا.')}};
 tabs();prompt_();
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.5/build/mp4-muxer.js"></script>
+<script>
+/* تصدير فيديو MP4: لقطة ثابتة لكل مشهد + رسم المقدّم المتحرك على canvas + ترميز WebCodecs */
+(function(){
+const W=1280,H=720,FPS=20,k=W/960,IC={};
+const $$=id=>document.getElementById(id),say=t=>{$$('msg').textContent=t};
+const load=s=>IC[s]||(IC[s]=new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('img'));i.src=s}));
+const wrap=(c,t,max)=>{const L=[];let l='';for(const w of t.split(/\s+/).filter(Boolean)){const n=l?l+' '+w:w;if(l&&c.measureText(n).width>max){L.push(l);l=w}else l=n}if(l)L.push(l);return L};
+const dur=sc=>{const w=(sc.notes||'').trim().split(/\s+/).filter(Boolean).length;return Math.max(4000,(sc.panels.length+2)*600+2500,w*420+1500)};
+async function layer(sc){const m=sc.man;if(!m.on)return null;
+ if(clipOk(m.anim)){const clip=CLIPS[m.anim],im={};await Promise.all([...new Set(clip.steps.map(s=>s[0]))].map(async n=>im[n]=await load('frames/'+n)));return {clip,im}}
+ const src=m.img||'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(manSVG(m).replace('<svg ','<svg width="280" height="420" '));
+ return {still:await load(src),svg:!m.img}}
+function drawMan(c,L,m,t,D){if(!L)return;
+ if(L.still){const h=m.h*k,w=h*L.still.naturalWidth/L.still.naturalHeight;c.save();c.translate((m.x*k)+w/2,0);if(m.flip&&!L.svg)c.scale(-1,1);c.drawImage(L.still,-w/2,m.y*k,w,h);c.restore();return}
+ const {clip,im}=L,st=clip.steps,n=st.length,T=st.reduce((s,x)=>s+x[1],0),dist=m.travel||0,p=Math.min(1,t/D);
+ const turn=clip.face==='right'?dist<0:clip.face==='left'?dist>0:false,sx=(m.flip!==turn)?-1:1;
+ let l=t%T,i=0;if(dist!==0&&p>=1&&clip.walk)l=0;else for(;i<n-1;i++){if(l<st[i][1])break;l-=st[i][1]}
+ const cur=im[st[i][0]],prev=im[st[(i+n-1)%n][0]],a=clip.fade?Math.min(1,l/clip.fade):1;
+ const bw=m.h*FRM.CW/FRM.BH*k,bh=m.h*FRM.CH/FRM.BH*k;
+ c.save();c.translate((m.x+dist*p)*k+bw/2,(m.y+m.h)*k);c.scale(sx,1+.012*Math.sin(t/1000*2.4));
+ if(a<1&&prev!==cur)c.drawImage(prev,-bw/2,-bh,bw,bh);
+ c.globalAlpha=a;c.drawImage(cur,-bw/2,-bh,bw,bh);c.restore()}
+function drawSub(c,pg){if(!pg)return;c.save();c.direction='rtl';c.textAlign='center';c.textBaseline='middle';c.font='700 30px Cairo,Tahoma,sans-serif';
+ const lh=44,h=pg.length*lh+24,w=Math.min(1160,Math.max(...pg.map(x=>c.measureText(x).width))+60),x=(W-w)/2,y=H-h-24;
+ c.fillStyle='rgba(5,10,15,.7)';c.strokeStyle='rgba(255,255,255,.14)';c.beginPath();c.roundRect?c.roundRect(x,y,w,h,18):c.rect(x,y,w,h);c.fill();c.stroke();
+ c.fillStyle='#fff';pg.forEach((s,j)=>c.fillText(s,W/2,y+12+lh*(j+.5)));c.restore()}
+async function run(){
+ const b=$$('mp4');
+ if(!window.VideoEncoder||!window.Mp4Muxer||!window.html2canvas){say('المتصفح لا يدعم تصدير MP4 (جرّب Chrome أو Edge أو Safari حديث).');return}
+ let cfg=null;for(const codec of ['avc1.640028','avc1.4d0028','avc1.42001f']){const c={codec,width:W,height:H,bitrate:4e6,framerate:FPS};try{if((await VideoEncoder.isConfigSupported(c)).supported){cfg=c;break}}catch(_){}}
+ if(!cfg){say('ترميز H.264 غير متاح في هذا المتصفح.');return}
+ b.disabled=true;let err=null;
+ try{
+  try{await document.fonts.load('700 30px Cairo')}catch(_){}
+  const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+  const enc=new VideoEncoder({output:(ch,meta)=>mux.addVideoChunk(ch,meta),error:e=>{err=e}});enc.configure(cfg);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d'),subs=$$('mp4Sub').checked;let n=0;
+  for(let s=0;s<P.scenes.length;s++){
+   const sc=P.scenes[s],D=dur(sc);say('المشهد '+(s+1)+' من '+P.scenes.length+': تجهيز…');
+   const base=await snap(Object.assign({},sc,{man:Object.assign({},sc.man,{on:false})})),L=await layer(sc);
+   let pages=[];if(subs&&(sc.notes||'').trim()){c.font='700 30px Cairo,Tahoma,sans-serif';c.direction='rtl';const ls=wrap(c,sc.notes.trim(),1090);for(let i=0;i<ls.length;i+=2)pages.push(ls.slice(i,i+2))}
+   const N=Math.ceil(D/1000*FPS);
+   for(let f=0;f<N;f++){const t=f*1000/FPS;
+    c.globalAlpha=1;c.clearRect(0,0,W,H);c.drawImage(base,0,0,W,H);drawMan(c,L,sc.man,t,D);drawSub(c,pages[Math.min(pages.length-1,Math.floor(f/N*pages.length))]);
+    const fr=new VideoFrame(cv,{timestamp:Math.round(n*1e6/FPS),duration:Math.round(1e6/FPS)});enc.encode(fr,{keyFrame:n%(FPS*2)===0});fr.close();n++;
+    if(err)throw err;
+    if(enc.encodeQueueSize>6)await new Promise(r=>setTimeout(r,10));
+    if(f%10===0){say('المشهد '+(s+1)+' من '+P.scenes.length+': '+Math.round(f/N*100)+'%');await new Promise(r=>setTimeout(r))}}
+  }
+  await enc.flush();if(err)throw err;mux.finalize();
+  dl(new Blob([mux.target.buffer],{type:'video/mp4'}),'lesson.mp4');say('تم إنشاء الفيديو.');
+ }catch(e){console.error(e);say(e&&e.name==='SecurityError'?'تعذّر الرسم: شغّل الاستوديو من GitHub Pages بدل فتح الملف مباشرة.':'تعذّر إنشاء الفيديو.')}
+ finally{b.disabled=false}}
+$$('mp4').onclick=run;
 })();
 </script>
 </body>
